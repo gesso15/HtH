@@ -10,6 +10,7 @@ import urlparse
 
 # from display import HTML
 import jinja2
+import random
 #from jinja2 import Template
 # from pandas import DataFrame, Series
 # import pandas as pd
@@ -38,13 +39,24 @@ def imagequery(id, derivative="Thumbnail"):
 
 app = Flask(__name__)
 
+# number of objects to return from search
+ROWS = 10
+
 @app.route('/')
 def hello_world():
-    result = query(q='''objcollector_txt:Kroeber''', fl="objcollector_ss", rows=4)['response']
-    print result
-    imageURL = imagequery(id="c8055214-50e7-49b1-b15b",derivative="Medium")
-    print imageURL
-    return render_template('hello.html', MY_URL = imageURL)
+    # q = search field and type (blob_ss ensures only objects with images)
+    # fl = filter for returned things from search
+    # rows = number of objects to return
+    # result = query(q='''objtype_s:"archaeology" AND objproddate_txt:(+Manchu +(Qing) +Dynasty) AND blob_ss:[* TO *]''', fl="blob_ss,objname_s,objproddate_txt", rows=ROWS+1)['response']
+    result = query(q='''objproddate_txt:(+Manchu +(Qing) +Dynasty) AND blob_ss:[* TO *]''', fl="blob_ss,objname_s,objproddate_txt", rows=ROWS+1)['response']
+    print result # debug
+    # Pick a random object on page reload
+    rand_obj = random.randint(0,ROWS)
+    object_name = result[u'docs'][rand_obj][u'objname_s']
+    obj_proddate = result[u'docs'][rand_obj][u'objproddate_txt']
+    imageURL = imagequery(id=result[u'docs'][rand_obj][u'blob_ss'][0],derivative="Medium")
+    # print imageURL # debug
+    return render_template('hello.html', img_url = imageURL, objname_s = object_name, objproddate_begin_dt = obj_proddate)
 
 
 if __name__ == "__main__":
