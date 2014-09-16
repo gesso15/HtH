@@ -15,6 +15,7 @@ class Artifact_card:
         fcp = None
         prod_date_begin = None
         prod_date_end = None
+        prod_date_s = None
         asso_cult = None
         object_id = None
         img_id = None
@@ -27,7 +28,7 @@ class Artifact_card:
 # fl = filter for returned things from search
 # rows = number of objects to return
 ###
-def query_constructor(query_terms = '(objproddate_begin_dt:[0000-01-23T00:00:00Z TO 1931-01-01T00:00:00Z] OR objproddate_end_dt:[0000-01-01T00:00:00Z TO 1931-01-01T00:00:00Z]) AND blob_ss:[* TO *]', search_filter = "objname_s, objfcp_s, objproddate_begin_dt, objproddate_end_dt, objassoccult, id, blob_ss, objdescr_s, objfilecode_ss", max_results = 100):
+def query_constructor(query_terms = '(objproddate_begin_dt:[0000-01-23T00:00:00Z TO 1931-01-01T00:00:00Z] OR objproddate_end_dt:[0000-01-01T00:00:00Z TO 1931-01-01T00:00:00Z]) AND blob_ss:[* TO *]', search_filter = "objname_s, objfcp_s, objproddate_begin_dt, objproddate_end_dt, objproddate_s, objassoccult, id, blob_ss, objdescr_s, objfilecode_ss", max_results = 100):
     # result = query(q='''objtype_s:"archaeology" AND objproddate_txt:(+Manchu +(Qing) +Dynasty) AND blob_ss:[* TO *]''', fl="blob_ss,objname_s,objproddate_txt", rows=ROWS+1)['response']
     # result = api_utils.query(q='''objtype_s:"ethnography" AND (objfilecode_ss:"2.2 Personal Adornments and Accoutrements") AND blob_ss:[* TO *]''', fl="", rows=ROWS+1)['response']
     return api_utils.query(q = query_terms, fl = search_filter, rows = max_results)['response']
@@ -35,7 +36,7 @@ def query_constructor(query_terms = '(objproddate_begin_dt:[0000-01-23T00:00:00Z
 # number of objects to return from search
 ROWS = 100
 
-@app.route('/')
+@app.route('/', methods = ['GET'])
 def hello_world():
     rand_obj = random.randint(0,ROWS)
     result = query_constructor()
@@ -48,9 +49,19 @@ def hello_world():
 
     # obj_proddate = result[u'docs'][rand_obj][u'objproddate_txt']
     if result[u'docs'][rand_obj].get(u'objproddate_begin_dt'):
-        object_date = result[u'docs'][rand_obj][u'objproddate_begin_dt']
+        object_begin_date = result[u'docs'][rand_obj][u'objproddate_begin_dt']
     else:
-        object_date = "No production date noted" 
+        object_begin_date = "No production begin date noted" 
+
+    if result[u'docs'][rand_obj].get(u'objproddate_end_dt'):
+        object_end_date = result[u'docs'][rand_obj][u'objproddate_end_dt']
+    else:
+        object_end_date = "No production end date noted" 
+
+    if result[u'docs'][rand_obj].get(u'objproddate_s'):
+        object_date = result[u'docs'][rand_obj][u'objproddate_s']
+    else:
+        object_date = "No production date(string) noted" 
 
     if result[u'docs'][rand_obj].get(u'objfcp_s'):
         object_field_collection_place = result[u'docs'][rand_obj][u'objfcp_s']
@@ -59,8 +70,12 @@ def hello_world():
 
     imageURL = api_utils.imagequery(id=result[u'docs'][rand_obj][u'blob_ss'][0],derivative="Medium")
     # print imageURL # debug
-    return render_template('hello.html', img_url = imageURL, objname_s = object_name, objproddate_begin_dt = object_date, objfcp_txt = object_field_collection_place)#obj_proddate)
+    return render_template('hello.html', img_url = imageURL, objname_s = object_name, objproddate_begin_dt = object_begin_date, objproddate_end_dt = object_end_date, objproddate_s = object_date, objfcp_txt = object_field_collection_place)#obj_proddate)
 
+@app.route('/', methods = ['POST'])
+def hello_world_post():
+    return {u'True'}
+    
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8888)
