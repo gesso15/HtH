@@ -74,8 +74,7 @@ def hello_world():
 
 @app.route('/', methods = ['POST'])
 def hello_world_post():
-    return {u'True'}
-    
+    return u'True'
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8888)

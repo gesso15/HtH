@@ -1,17 +1,14 @@
 <!doctype html>
 <html>
 <head>
+	<script src="jquery-2.1.1.min.js"></script>
 	<!-- Latest compiled and minified Bootstrap CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	<link rel="stylesheet" href="static/index.css">
 
-<title>Hello from Flask</title>
+<title>Hack the Hearst - Timeline</title>
 </head>
-
-
 <body>
-
-
 	<div id="left-box">
 		<h1>{{ objname_s }}</h1>
 		<p>production date start: {{ objproddate_begin_dt }}</p>
@@ -34,18 +31,23 @@
 			<button class="btn btn-default inline-button" id="submit">Submit</button>
 			<button class="btn btn-default inline-button" id="reset">Reset Slider</button>
 		</div>
+		<form action="/" id="searchForm">
+  			<input type="text" name="date_guess" placeholder="Take a guess...">
+  			<input type="submit" value="Submit">
+		</form>
+
+		<div id="result"> </div>
 	</div>
 
 	<div id="slider-block">
 		<h3>Put the time slider here!</h3>
+	
 	</div>
 
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script> 
 	<!-- Latest compiled and minified Bootstrap JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script src="static/libs/post_guess.js"></script>
 
 </body>
-
-
-
 </html>
