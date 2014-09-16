@@ -10,11 +10,11 @@
 </head>
 <body>
 	<div id="left-box">
-		<h1>{{ card.name }}</h1>
-		<p>production date start: {{ card.prod_date_begin }}</p>
-		<p>production date end: {{ card.prod_date_end }}</p>
-		<p>production date string: {{ card.prod_date_s }}</p>
-
+		<h1 align="left">{{ card.name }}</h1>
+		<p align="left">Location of discovery: {{ card.fcp }}</p>
+		<p align="left">Associated culture: {{ card.asso_cult }}</p>
+		<p align="left">Verbatim description: {{ card.description }}</p>
+		<p align="left">{{ card.museum_num }}</p>
 		<div id="main-img-block">
 			<img src={{ card.img_URL }}/>
 		</div>
@@ -22,25 +22,48 @@
 
 	<div id="right-box">
 		<div id="instructions">
-			<p>Take a look at the ancient artifact on the left. Enter your guess into the box below and submit your answer to test your knowledge skillz!</p>
+			<p>Take a look at the ancient artifact on the left. Enter your guess into the box below and submit your answer to test your knowledge!</p>
 		</div>
-
-		<button class="btn btn-default" id="hint">Click for hint</button>
-
+		
+		</br>
+		
+		<!-- <button class="btn btn-default" id="hint">Click for hint</button>-->
 		<div id="buttons-box">
-			<!--<form id="reset" action="/">
-  				<button type="submit" >Refresh</button>
-			</form> -->
+			<!--
 			<button class="btn btn-default inline-button" id="submit">Submit</button>
 			<button class="btn btn-default inline-button" id="reset">Refresh</button>
+			-->
 		</div>
 
-		<form id="searchForm" action="/" method="Post">
+		<form id="guessForm" action="/" method="Post">
   			<input type="text" name="date_guess" placeholder="Take a guess...">
   			<input type="submit" value="Submit">
 		</form>
 
 		<div id="result"> </div>
+
+		<!-- Temporary hack for hint / answer give away :) -->
+		<script type="text/javascript">
+			function toggle_visibility(id) {
+			   var e = document.getElementById(id);
+			   if(e.style.display == 'block')
+			      e.style.display = 'none';
+			   else
+			      e.style.display = 'block';
+			}
+		</script>
+		
+		</br>
+		
+		<button onclick="toggle_visibility('answer');">
+			Show/hide answer</button>
+		<div id='answer' style="display: none">
+			<p>production date start: {{ card.prod_date_begin }}</p>
+			<p>production date end: {{ card.prod_date_end }}</p>
+			<p>production date string: {{ card.prod_date_s }}</p>
+		</div>
+		<!-- end answer give away hack -->
+
 	</div>
 
 	<div id="slider-block">
