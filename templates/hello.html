@@ -12,7 +12,7 @@
 	<div id="left-box">
 		<h1 align="left">{{ card.name }}</h1>
 		<p align="left">Location of discovery: {{ card.fcp }}</p>
-		<p align="left">Associated culture: {{ card.asso_cult }}</p>
+		<p align="left">Associated culture: {% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</p>
 		<p align="left">Verbatim description: {{ card.description }}</p>
 		<p align="left">{{ card.museum_num }}</p>
 		<div id="main-img-block">

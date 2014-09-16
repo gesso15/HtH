@@ -32,7 +32,7 @@ myfirstcard = Artifact_card()
 # fl = filter for returned things from search
 # rows = number of objects to return
 ###
-def query_constructor(query_terms = '(objproddate_begin_dt:[-9000-01-23T00:00:00Z TO 1931-01-01T00:00:00Z] OR objproddate_end_dt:[-9000-01-01T00:00:00Z TO 1931-01-01T00:00:00Z]) AND blob_ss:[* TO *]', search_filter = "objname_s, objfcp_s, objproddate_begin_dt, objproddate_end_dt, objproddate_s, objassoccult_s, id, blob_ss, objdescr_s, objfilecode_ss, objmusno_s", max_results = 100):
+def query_constructor(query_terms = '(objproddate_begin_dt:[-9000-01-23T00:00:00Z TO 1931-01-01T00:00:00Z] OR objproddate_end_dt:[-9000-01-01T00:00:00Z TO 1931-01-01T00:00:00Z]) AND blob_ss:[* TO *]', search_filter = "objname_s, objfcp_s, objproddate_begin_dt, objproddate_end_dt, objproddate_s, objassoccult_ss, id, blob_ss, objdescr_s, objfilecode_ss, objmusno_s", max_results = 100):
     # result = query(q='''objtype_s:"archaeology" AND objproddate_txt:(+Manchu +(Qing) +Dynasty) AND blob_ss:[* TO *]''', fl="blob_ss,objname_s,objproddate_txt", rows=ROWS+1)['response']
     # result = api_utils.query(q='''objtype_s:"ethnography" AND (objfilecode_ss:"2.2 Personal Adornments and Accoutrements") AND blob_ss:[* TO *]''', fl="", rows=ROWS+1)['response']
     return api_utils.query(q = query_terms, fl = search_filter, rows = max_results)['response']
@@ -53,7 +53,7 @@ def hello_world():
     myfirstcard.prod_date_begin = result[u'docs'][rand_obj].get(u'objproddate_begin_dt')
     myfirstcard.prod_date_end = result[u'docs'][rand_obj].get(u'objproddate_end_dt')
     myfirstcard.prod_date_s = result[u'docs'][rand_obj].get(u'objproddate_s')
-    myfirstcard.asso_cult = result[u'docs'][rand_obj].get(u'objassoccult_s')
+    myfirstcard.asso_cult = result[u'docs'][rand_obj].get(u'objassoccult_ss', [])
     myfirstcard.object_id = result[u'docs'][rand_obj].get(u'id')
     myfirstcard.img_id = result[u'docs'][rand_obj].get(u'blob_ss')
     myfirstcard.img_URL = api_utils.imagequery(id=result[u'docs'][rand_obj][u'blob_ss'][0],derivative="Medium")
