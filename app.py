@@ -19,6 +19,7 @@ class Artifact_card:
         asso_cult = None
         object_id = None
         img_id = None
+        img_URL = None
         description = None
         obj_file_code = None
 
@@ -28,49 +29,35 @@ class Artifact_card:
 # fl = filter for returned things from search
 # rows = number of objects to return
 ###
-def query_constructor(query_terms = '(objproddate_begin_dt:[0000-01-23T00:00:00Z TO 1931-01-01T00:00:00Z] OR objproddate_end_dt:[0000-01-01T00:00:00Z TO 1931-01-01T00:00:00Z]) AND blob_ss:[* TO *]', search_filter = "objname_s, objfcp_s, objproddate_begin_dt, objproddate_end_dt, objproddate_s, objassoccult, id, blob_ss, objdescr_s, objfilecode_ss", max_results = 100):
+def query_constructor(query_terms = '(objproddate_begin_dt:[-9000-01-23T00:00:00Z TO 1931-01-01T00:00:00Z] OR objproddate_end_dt:[-9000-01-01T00:00:00Z TO 1931-01-01T00:00:00Z]) AND blob_ss:[* TO *]', search_filter = "objname_s, objfcp_s, objproddate_begin_dt, objproddate_end_dt, objproddate_s, objassoccult, id, blob_ss, objdescr_s, objfilecode_ss", max_results = 100):
     # result = query(q='''objtype_s:"archaeology" AND objproddate_txt:(+Manchu +(Qing) +Dynasty) AND blob_ss:[* TO *]''', fl="blob_ss,objname_s,objproddate_txt", rows=ROWS+1)['response']
     # result = api_utils.query(q='''objtype_s:"ethnography" AND (objfilecode_ss:"2.2 Personal Adornments and Accoutrements") AND blob_ss:[* TO *]''', fl="", rows=ROWS+1)['response']
     return api_utils.query(q = query_terms, fl = search_filter, rows = max_results)['response']
 
 # number of objects to return from search
-ROWS = 100
+ROWS = 100000000
 
 @app.route('/', methods = ['GET'])
 def hello_world():
-    rand_obj = random.randint(0,ROWS)
-    result = query_constructor()
+    # rand_obj = random.randint(0,ROWS)
+    result = query_constructor(max_results = ROWS)
+    rand_obj = random.randint(0, len(result[u'docs'])-1)
+    print len(result[u'docs'])
+    # print result
     myfirstcard = Artifact_card()
-    myfirstcard.name = result[u'docs'][rand_obj][u'objname_s']
-    # print myfirstcard.name # debug
-    # print result # debug
-    # Pick a random object on page reload
-    object_name = result[u'docs'][rand_obj][u'objname_s']
+    myfirstcard.name = result[u'docs'][rand_obj].get(u'objname_s')
+    myfirstcard.fcp = result[u'docs'][rand_obj].get(u'objfcp_s')
+    myfirstcard.prod_date_begin = result[u'docs'][rand_obj].get(u'objproddate_begin_dt')
+    myfirstcard.prod_date_end = result[u'docs'][rand_obj].get(u'objproddate_end_dt')
+    myfirstcard.prod_date_s = result[u'docs'][rand_obj].get(u'objproddate_s')
+    myfirstcard.asso_cult = result[u'docs'][rand_obj].get(u'objassoccult')
+    myfirstcard.object_id = result[u'docs'][rand_obj].get(u'id')
+    myfirstcard.img_id = result[u'docs'][rand_obj].get(u'blob_ss')
+    myfirstcard.img_URL = api_utils.imagequery(id=result[u'docs'][rand_obj][u'blob_ss'][0],derivative="Medium")
+    myfirstcard.description = result[u'docs'][rand_obj].get(u'objdescr_s')
+    myfirstcard.obj_file_code = result[u'docs'][rand_obj].get(u'objfilecode_ss')
 
-    # obj_proddate = result[u'docs'][rand_obj][u'objproddate_txt']
-    if result[u'docs'][rand_obj].get(u'objproddate_begin_dt'):
-        object_begin_date = result[u'docs'][rand_obj][u'objproddate_begin_dt']
-    else:
-        object_begin_date = "No production begin date noted" 
-
-    if result[u'docs'][rand_obj].get(u'objproddate_end_dt'):
-        object_end_date = result[u'docs'][rand_obj][u'objproddate_end_dt']
-    else:
-        object_end_date = "No production end date noted" 
-
-    if result[u'docs'][rand_obj].get(u'objproddate_s'):
-        object_date = result[u'docs'][rand_obj][u'objproddate_s']
-    else:
-        object_date = "No production date(string) noted" 
-
-    if result[u'docs'][rand_obj].get(u'objfcp_s'):
-        object_field_collection_place = result[u'docs'][rand_obj][u'objfcp_s']
-    else:
-        object_field_collection_place = "No collection place noted" 
-
-    imageURL = api_utils.imagequery(id=result[u'docs'][rand_obj][u'blob_ss'][0],derivative="Medium")
-    # print imageURL # debug
-    return render_template('hello.html', img_url = imageURL, objname_s = object_name, objproddate_begin_dt = object_begin_date, objproddate_end_dt = object_end_date, objproddate_s = object_date, objfcp_txt = object_field_collection_place)#obj_proddate)
+    return render_template('hello.html', card = myfirstcard) 
 
 @app.route('/', methods = ['POST'])
 def hello_world_post():

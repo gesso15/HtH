@@ -10,13 +10,13 @@
 </head>
 <body>
 	<div id="left-box">
-		<h1>{{ objname_s }}</h1>
-		<p>production date start: {{ objproddate_begin_dt }}</p>
-		<p>production date end: {{ objproddate_end_dt }}</p>
-		<p>production date string: {{ objproddate_s }}</p>
+		<h1>{{ card.name }}</h1>
+		<p>production date start: {{ card.prod_date_begin }}</p>
+		<p>production date end: {{ card.prod_date_end }}</p>
+		<p>production date string: {{ card.prod_date_s }}</p>
 
 		<div id="main-img-block">
-			<img src={{ img_url }}/>
+			<img src={{ card.img_URL }}/>
 		</div>
 	</div>
 
