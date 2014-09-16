@@ -1,0 +1,54 @@
+
+#left-box, #right-box {
+	min-height: 400px;
+	width: 400px;
+	background-color: green;
+	display: inline-block;
+	border-radius: 10px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+#left-box {
+	float: left;
+	margin-left: 100px;
+}
+
+#right-box {
+	float:right;
+	margin-right: 100px;
+
+}
+
+#main-img-block img {
+    width: 300px;
+	height: auto;
+	margin: 50px;
+}
+
+#slider-block {
+	width: auto;
+	height: 50px;
+	background-color: blue;
+	clear: both;
+	border-radius: 10px;
+}
+
+#instructions {
+	width: 300px;
+	height: 100px;
+	background-color: gray;
+	margin: auto;
+}
+
+#buttons-box {
+	margin: auto;
+	width: 50%;
+}
+
+.inline-button {
+	display: inline-block;
+	margin: 10px;
+	text-align: left;
+}
