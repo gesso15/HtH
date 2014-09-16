@@ -28,10 +28,14 @@
 		<button class="btn btn-default" id="hint">Click for hint</button>
 
 		<div id="buttons-box">
-			<!-- <button class="btn btn-default inline-button" id="submit">Submit</button>-->
+			<!--<form id="reset" action="/">
+  				<button type="submit" >Refresh</button>
+			</form> -->
+			<button class="btn btn-default inline-button" id="submit">Submit</button>
 			<button class="btn btn-default inline-button" id="reset">Refresh</button>
 		</div>
-		<form action="/" id="searchForm">
+
+		<form id="searchForm" action="/" method="Post">
   			<input type="text" name="date_guess" placeholder="Take a guess...">
   			<input type="submit" value="Submit">
 		</form>

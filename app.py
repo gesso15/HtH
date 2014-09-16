@@ -5,9 +5,9 @@ import json
 import jinja2
 import random
 import api_utils
+import dateutil.parser as parser
 
 app = Flask(__name__)
-
 
 class Artifact_card:
     def __init__(self):
@@ -23,6 +23,8 @@ class Artifact_card:
         description = None
         obj_file_code = None
 
+# My hacky global variable
+myfirstcard = Artifact_card()
 
 ###
 # q = search field and type (blob_ss ensures only objects with images)
@@ -44,7 +46,7 @@ def hello_world():
     rand_obj = random.randint(0, len(result[u'docs'])-1)
     print len(result[u'docs'])
     # print result
-    myfirstcard = Artifact_card()
+    # myfirstcard = Artifact_card()
     myfirstcard.name = result[u'docs'][rand_obj].get(u'objname_s')
     myfirstcard.fcp = result[u'docs'][rand_obj].get(u'objfcp_s')
     myfirstcard.prod_date_begin = result[u'docs'][rand_obj].get(u'objproddate_begin_dt')
@@ -56,12 +58,26 @@ def hello_world():
     myfirstcard.img_URL = api_utils.imagequery(id=result[u'docs'][rand_obj][u'blob_ss'][0],derivative="Medium")
     myfirstcard.description = result[u'docs'][rand_obj].get(u'objdescr_s')
     myfirstcard.obj_file_code = result[u'docs'][rand_obj].get(u'objfilecode_ss')
-
+        
     return render_template('hello.html', card = myfirstcard) 
 
+# Method to 
 @app.route('/', methods = ['POST'])
-def hello_world_post():
-    return u'True'
+def handle_guess():
+    # Grab the value from the form created in the js
+    guess_val = request.form.get('date_guess')
+    
+    # Convert to ISO date format
+    date = (parser.parse(guess_val))
+    print(date.isoformat())
+    
+    # Check the date range and return result
+    if guess_val >= myfirstcard.prod_date_begin and guess_val <= myfirstcard.prod_date_end:
+        return u'You got it right!'
+    else:
+        return u'Try again'
+
+    # TODO: Return true/false and the actual dates (and remove the dates from the display)
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8888)
