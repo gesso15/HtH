@@ -6,8 +6,23 @@ import jinja2
 import random
 import api_utils
 import dateutil.parser as parser
+from pahmasettings import FLASK_SESSION_SECRET
+# import model # for database. not in use yet
 
 app = Flask(__name__)
+app.config.update(
+    DEBUG=True,
+    SECRET_KEY= FLASK_SESSION_SECRET, # for session cookie
+    SESSION_COOKIE_HTTPONLY = False
+)
+
+# oh lookie! a session cookie! (use this to store player info?)
+# set up session cookie with some default fields when the user first visits the app.
+@app.before_request
+def setup_session():
+    session['game'] = session.get('game', {'score': 0, 'player_name': None})
+    # TODO: somewhere else in the app, allow user to put their name and record their score.
+    # Optionally, we can save their final score to a real database and show a leaderboard.
 
 class Artifact_card:
     def __init__(self):
