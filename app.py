@@ -55,8 +55,7 @@ def query_constructor(query_terms = '(objproddate_begin_dt:[-9000-01-23T00:00:00
 # number of objects to return from search
 ROWS = 100000000
 
-@app.route('/', methods = ['GET'])
-def hello_world():
+def get_artifact_card():
     # rand_obj = random.randint(0,ROWS)
     result = query_constructor(max_results = ROWS)
     rand_obj = random.randint(0, len(result[u'docs'])-1)
@@ -74,8 +73,13 @@ def hello_world():
     myfirstcard.description = result[u'docs'][rand_obj].get(u'objdescr_s')
     myfirstcard.obj_file_code = result[u'docs'][rand_obj].get(u'objfilecode_ss')
     myfirstcard.museum_num = result[u'docs'][rand_obj].get(u'objmusno_s')
-        
-    return render_template('hello.html', card = myfirstcard) 
+    return myfirstcard
+
+
+@app.route('/', methods = ['GET'])
+def hello_world():
+    art_card = get_artifact_card()
+    return render_template('hello.html', card = art_card) 
 
 # Method to 
 @app.route('/', methods = ['POST'])
@@ -94,6 +98,14 @@ def handle_guess():
         return u'Try again'
 
     # TODO: Return true/false and the actual dates (and remove the dates from the display)
+
+@app.route('/get_art', methods = ['GET'])
+def get_art():
+    art_card = get_artifact_card()
+    # need to convert this python object into JSON so that it can be processed by javascript
+    return # the JSON
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8888)
