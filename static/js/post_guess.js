@@ -31,3 +31,29 @@ $('#guessForm').submit(function(event){
     }
   });
 });
+
+
+// Toggle date info for debugging
+function toggle_visibility(id) {
+  var e = document.getElementById(id);
+  if(e.style.display == 'block')
+    { e.style.display = 'none'; }
+  else{ e.style.display = 'block'; }
+}
+
+function get_next_art() {
+  $.ajax({
+    url : "/get_art",
+    type: "GET",
+    data : "art please",
+    success: function(data, textStatus, jqXHR)
+    {
+      console.log("get success"); //debug line
+      // TODO: replace the old data with the new data.    
+    },
+    error: function (jqXHR, textStatus, errorThrown)
+    {
+      console.log("get fail"); // debug line
+    }
+  });
+}
