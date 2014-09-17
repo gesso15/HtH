@@ -60,8 +60,7 @@ def hello_world():
     # rand_obj = random.randint(0,ROWS)
     result = query_constructor(max_results = ROWS)
     rand_obj = random.randint(0, len(result[u'docs'])-1)
-    print len(result[u'docs'])
-    # print result
+    print len(result[u'docs']) # debug
     # myfirstcard = Artifact_card()
     myfirstcard.name = result[u'docs'][rand_obj].get(u'objname_s')
     myfirstcard.fcp = result[u'docs'][rand_obj].get(u'objfcp_s')
@@ -86,7 +85,7 @@ def handle_guess():
     
     # Convert to ISO date format
     date = (parser.parse(guess_val))
-    print(date.isoformat())
+    print(date.isoformat()) # debug
     
     # Check the date range and return result
     if guess_val >= myfirstcard.prod_date_begin and guess_val <= myfirstcard.prod_date_end:
