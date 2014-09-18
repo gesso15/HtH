@@ -11,15 +11,17 @@ $('#guessForm').submit(function(event){
   event.preventDefault();
   // Get some values from elements on the page
   var $form = $(this),
-  guess = $form.find( "input[name='date_guess']" ).val();
+  guess = $form.find( "input[name='date_guess']" ).val(),
+  museum_num = $("#left-box > p:nth-child(5) > span").text(), // grabbing this value from here for now. need to get it from session cookie instead eventually...
   formURL = $form.attr( "action" );
   console.log(guess); // debug
+  console.log(museum_num); //debug
   
   // the AJAX part
   $.ajax({
     type: 'POST', // HTTP request method (Send the data using post)
     url: formURL, // Where to send the data
-    data: {'date_guess': guess}, // Data to be sent
+    data: {'date_guess': guess, 'museum_num': museum_num}, // Data to be sent
     beforeSend:function(){
       // While we wait to get data back from the server, put a loading gif on the page
       $('#result').html('<div class="loading"><img src="http://www.kyleschaeffer.com/wp-content/uploads/2010/04/loading.gif" alt="Loading..." /></div>');
@@ -37,24 +39,21 @@ $('#guessForm').submit(function(event){
 });
 
 
-// Toggle date info for debugging
+// Toggle date info for debugging (show/hide)
 function toggle_visibility(id) {
-  var e = document.getElementById(id);
-  if(e.style.display == 'block')
-    { e.style.display = 'none'; }
-  else{ e.style.display = 'block'; }
+  $(id).toggle();
 }
 
 function get_next_art() {
   $.ajax({
     url : "/get_art",
     type: "GET",
-    data : "art please",
+    data : "",
     success: function(server_data, textStatus, jqXHR)
     {
       var data = JSON.parse(server_data);
       console.log(data); //debug line
-      $("#left-box > h1").text(data["name"]); //name
+      $("#left-box > h1").text(data["name"]); // name
       $("#left-box > p:nth-child(2) > span").text(data["fcp"]); // fcp
       $("#left-box > p:nth-child(3) > span").text(data["assoccult"]); // assoccult
       $("#left-box > p:nth-child(4) > span").text(data["description"]); // description
@@ -64,6 +63,8 @@ function get_next_art() {
       $("#answer > p:nth-child(1) > span").text(data["prod_date_begin"]); // prod_date_begin
       $("#answer > p:nth-child(2) > span").text(data["prod_date_end"]); // prod_date_end
       $("#answer > p:nth-child(3) > span").text(data["prod_date_s"]); // prod_date_s
+      $("#answer").hide(); // make sure answer is hidden again
+      $('#result').empty(); // remove feedback from previous card guess
     },
     error: function (jqXHR, textStatus, errorThrown)
     {
