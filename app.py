@@ -99,12 +99,27 @@ def handle_guess():
 
     # TODO: Return true/false and the actual dates (and remove the dates from the display)
 
+def art_to_dict(art_obj):
+    result = {}
+    result['name'] = art_obj.name
+    result['fcp'] =  art_obj.fcp
+    result['prod_date_begin'] =  art_obj.prod_date_begin
+    result['prod_date_end'] =  art_obj.prod_date_end
+    result['prod_date_s'] =  art_obj.prod_date_s
+    result['asso_cult'] =  art_obj.asso_cult
+    result['object_id'] =  art_obj.object_id
+    result['img_id'] =  art_obj.img_id
+    result['img_URL'] =  art_obj.img_URL
+    result['description'] =  art_obj.description
+    result['obj_file_code'] =  art_obj.obj_file_code
+    result['museum_num'] =  art_obj.museum_num
+    return result
+
 @app.route('/get_art', methods = ['GET'])
 def get_art():
     art_card = get_artifact_card()
-    # need to convert this python object into JSON so that it can be processed by javascript
-    return # the JSON
-
+    art_dict = art_to_dict(art_card)
+    return json.dumps(art_dict)
 
 
 if __name__ == "__main__":

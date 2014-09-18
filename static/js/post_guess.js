@@ -46,10 +46,20 @@ function get_next_art() {
     url : "/get_art",
     type: "GET",
     data : "art please",
-    success: function(data, textStatus, jqXHR)
+    success: function(server_data, textStatus, jqXHR)
     {
-      console.log("get success"); //debug line
-      // TODO: replace the old data with the new data.    
+      var data = JSON.parse(server_data);
+      console.log(data); //debug line
+      $("#left-box > h1").text(data["name"]); //name
+      $("#left-box > p:nth-child(2) > span").text(data["fcp"]); // fcp
+      $("#left-box > p:nth-child(3) > span").text(data["assoccult"]); // assoccult
+      $("#left-box > p:nth-child(4) > span").text(data["description"]); // description
+      $("#left-box > p:nth-child(5) > span").text(data["museum_num"]); // museum_num
+      $("#main-img-block > img").attr("src", data["img_URL"]); // img_URL
+
+      $("#answer > p:nth-child(1) > span").text(data["prod_date_begin"]); // prod_date_begin
+      $("#answer > p:nth-child(2) > span").text(data["prod_date_end"]); // prod_date_end
+      $("#answer > p:nth-child(3) > span").text(data["prod_date_s"]); // prod_date_s
     },
     error: function (jqXHR, textStatus, errorThrown)
     {

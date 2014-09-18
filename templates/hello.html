@@ -4,10 +4,10 @@
 <div id="shotgun-replace"> <!--  -->
 	<div id="left-box">
 		<h1 align="left">{{ card.name }}</h1>
-		<p align="left">Location of discovery: {{ card.fcp }}</p>
-		<p align="left">Associated culture: {% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</p>
-		<p align="left">Verbatim description: {{ card.description }}</p>
-		<p align="left">{{ card.museum_num }}</p>
+		<p align="left">Location of discovery:<span>{{ card.fcp }}</span></p>
+		<p align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</span></p>
+		<p align="left">Verbatim description: <span>{{ card.description }}</span></p>
+		<p align="left"><span>{{ card.museum_num }}</span></p>
 		<div id="main-img-block">
 			<img src={{ card.img_URL }}/>
 		</div>
@@ -40,9 +40,9 @@
 		<!-- Temporary hack for hint / answer give away :) -->
 		<button onclick="toggle_visibility('answer');"> Show/hide answer </button>
 		<div id='answer' style="display: none">
-			<p>production date start: {{ card.prod_date_begin }}</p>
-			<p>production date end: {{ card.prod_date_end }}</p>
-			<p>production date string: {{ card.prod_date_s }}</p>
+			<p>production date start: <span>{{ card.prod_date_begin }}</span></p>
+			<p>production date end: <span>{{ card.prod_date_end }}</span></p>
+			<p>production date string: <span>{{ card.prod_date_s }}</span></p>
 		</div>
 		<!-- end answer give away hack -->
 		
