@@ -151,14 +151,14 @@ def handle_guess():
         session['game']['score'] += 100 # increase points
         session['game']['prev_cards'].append(museum_num) # move current card...
         session['game']['current_card'] = None # to list of previous cards
-        
+        # Give feedback to user.
         result['eval'] = 'You got it right!'
     else:
         result['eval'] = 'Try again.'
+    # Include score in response
     result['points'] = session['game']['score']
-    
     print session #debug
-    
+    # Send JSON version of result to frontend
     return json.dumps(result)
 
     # TODO: Return true/false and the actual dates (and remove the dates from the display)
@@ -176,6 +176,16 @@ def get_art():
     print "PROVIDED NEW CARD", session # debug
     art_dict = art_to_dict(art_card)
     return json.dumps(art_dict)
+
+# register user name
+@app.route('/register', methods = ['POST'])
+def register_name():
+    player_name = request.form.get('name')
+    session['game']['player_name'] = player_name
+    print "REGISTERED PLAYER AS ", player_name # debug
+    print session # debug
+    return "post success"
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8888)

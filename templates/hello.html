@@ -1,90 +1,91 @@
 {% extends 'base.html' %} <!-- Indicates which template this page uses as a base. -->
 {% block body %} <!-- Begin content to be combined with base.html. -->
 
-<div id="shotgun-replace"> <!--  -->
-	<div id="left-box">
-		<h1 align="left">{{ card.name }}</h1>
-		<p align="left">Location of discovery:<span>{{ card.fcp }}</span></p>
-		<p align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</span></p>
-		<p align="left">Verbatim description: <span>{{ card.description }}</span></p>
-		<p align="left"><span>{{ card.museum_num }}</span></p>
-		<div id="main-img-block">
-			<img src={{ card.img_URL }}/>
-		</div>
+
+<div id="left-box">
+	<h1 align="left">{{ card.name }}</h1>
+	<p align="left">Location of discovery:<span>{{ card.fcp }}</span></p>
+	<p align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</span></p>
+	<p align="left">Verbatim description: <span>{{ card.description }}</span></p>
+	<p align="left"><span>{{ card.museum_num }}</span></p>
+	<div id="main-img-block">
+		<img src={{ card.img_URL }}/>
+	</div>
+</div>
+
+<div id="right-box">
+	<p>Welcome <span></span></p>
+	<div id="instructions">
+		<p>Take a look at the artifact on the left. Enter your guess into the box below and submit your answer to test your knowledge!</p>
+	</div>
+	
+	</br>
+	
+	<!-- <button class="btn btn-default" id="hint">Click for hint</button>-->
+	<div id="buttons-box">
+		<!--
+		<button class="btn btn-default inline-button" id="submit">Submit</button>
+		<button class="btn btn-default inline-button" id="reset">Refresh</button>
+		-->
 	</div>
 
-	<div id="right-box">
-		<div id="instructions">
-			<p>Take a look at the artifact on the left. Enter your guess into the box below and submit your answer to test your knowledge!</p>
-		</div>
-		
-		</br>
-		
-		<!-- <button class="btn btn-default" id="hint">Click for hint</button>-->
-		<div id="buttons-box">
-			<!--
-			<button class="btn btn-default inline-button" id="submit">Submit</button>
-			<button class="btn btn-default inline-button" id="reset">Refresh</button>
-			-->
-		</div>
+	<form id="guessForm" action="/" method="Post">
+			<input type="text" name="date_guess" placeholder="Take a guess...">
+			<input type="submit" value="Submit">
+	</form>
 
-		<form id="guessForm" action="/" method="Post">
-  			<input type="text" name="date_guess" placeholder="Take a guess...">
-  			<input type="submit" value="Submit">
-		</form>
+	<div id="result"> </div>
 
-		<div id="result"> </div>
+	</br>
 
-		</br>
+	<!-- Temporary hack for hint / answer give away :) -->
+	<button onclick="toggle_visibility('#answer');"> Show/hide answer </button>
+	<div id='answer' style="display: none">
+		<p>production date start: <span>{{ card.prod_date_begin }}</span></p>
+		<p>production date end: <span>{{ card.prod_date_end }}</span></p>
+		<p>production date string: <span>{{ card.prod_date_s }}</span></p>
+	</div>
+	<!-- end answer give away hack -->
+	
+	</br>
+	<button onclick="get_next_art()">Next Artifact</button>
 
-		<!-- Temporary hack for hint / answer give away :) -->
-		<button onclick="toggle_visibility('#answer');"> Show/hide answer </button>
-		<div id='answer' style="display: none">
-			<p>production date start: <span>{{ card.prod_date_begin }}</span></p>
-			<p>production date end: <span>{{ card.prod_date_end }}</span></p>
-			<p>production date string: <span>{{ card.prod_date_s }}</span></p>
-		</div>
-		<!-- end answer give away hack -->
-		
-		</br>
-		<button onclick="get_next_art()">Next Artifact</button>
-
-		<div id="money-box">
-			<p>You have <span> 0 </span> dollars.</p>
-		</div>
-
+	<div id="money-box">
+		<p>You have <span> 0 </span> dollars.</p>
 	</div>
 
-	<div id="slider-block">
-		<h3>Put the time slider here!</h3>
-	</div>
+</div>
 
-	<!-- Modal to display on introductory pageload -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  <div class="modal-dialog">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-	        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
-	      </div>
-	      <div class="modal-body">
-	        <p>Welcome to Museum Manager!</p>
-	        <p>We've received a new shipment of artifacts and we need your help!</p>
-	        <p>Enter your name to start identifying artifacts.</p>
-	      </div>
-	      <div class="modal-footer">
-	      	<form id='enter-name' action='#' method='POST'>
-		      	<input type="text" name="date_guess" placeholder="Your Name">
-		      	<input type="submit" class="btn btn-primary"></button>
-		        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        </form>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+<div id="slider-block">
+	<h3>Put the time slider here!</h3>
+</div>
+
+<!-- Modal to display on introductory pageload -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div id="modal-message" class="modal-body">
+        <p>Welcome to Museum Manager!</p>
+        <p>We've received a new shipment of artifacts and we need your help!</p>
+        <p>Enter your name to start identifying artifacts.</p>
+      </div>
+      <div class="modal-footer">
+      	<form id='nameForm' action='/register' method='POST'>
+	      	<input type="text" name="player_name" placeholder="Your Name">
+	      	<input type="submit" class="btn btn-primary"></button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="static/js/post_guess.js"></script>
 
-</div>
+
 
 {% endblock %} <!-- End content to be combined with base.html. -->
