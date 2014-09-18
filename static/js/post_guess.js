@@ -26,10 +26,12 @@ $('#guessForm').submit(function(event){
       // While we wait to get data back from the server, put a loading gif on the page
       $('#result').html('<div class="loading"><img src="http://www.kyleschaeffer.com/wp-content/uploads/2010/04/loading.gif" alt="Loading..." /></div>');
     },
-    success:function(data){
+    success:function(server_data){
+      var data = JSON.parse(server_data);
       // If the request was successful, replace the loading gif with the data received
       console.log(data); // debug
-      $('#result').empty().append(data);
+      $('#result').empty().append(data["eval"]);
+      $("#money-box > p > span").text(data["points"]);
     },
     error:function(){
       // If the request failed, give feedback to user (replace loading gif with failure message)

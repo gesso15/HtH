@@ -1,5 +1,5 @@
 from itertools import islice
-from flask import *
+from flask import Flask, request, session, render_template
 import requests
 import json
 import jinja2
@@ -12,10 +12,11 @@ from pahmasettings import FLASK_SESSION_SECRET
 
 app = Flask(__name__)
 app.config.update(
-    DEBUG=True,
     SECRET_KEY= FLASK_SESSION_SECRET, # for session cookie
     SESSION_COOKIE_HTTPONLY = False
 )
+
+app.jinja_env.undefined = jinja2.StrictUndefined
 
 # Data structure to capture results from Hearst API queries
 class Artifact_card:
@@ -34,7 +35,7 @@ class Artifact_card:
         museum_num = None
 
 # Number of objects to return from search
-ROWS = 100000000
+ROWS = 100
 
 ###
 # Constructs Hearst API queries and returns results. 
@@ -68,7 +69,7 @@ def make_artifact_card(result, index):
 def get_random_artifact():
     result = query_constructor(max_results = ROWS)
     rand_index = random.randint(0, len(result[u'docs'])-1)
-    print len(result[u'docs']) # debug
+    print "NUMBER OF RESULTS: ", len(result[u'docs']) # debug
     card = make_artifact_card(result, rand_index)
     return card
 
@@ -101,49 +102,64 @@ def art_to_dict(art_obj):
 
 # oh lookie! a session cookie! (use this to store player info?)
 # set up session cookie with some default fields when the user first visits the app.
-@app.before_request
+@app.before_first_request
 def setup_session():
-    session['game'] = session.get('game', {'score': 0, 'player_name': None, 'cards': {} })
+    session['game'] = {'score': 0, 'player_name': None, 'prev_cards': [], 'current_card': None }
+    print "SETTING UP SESSION", session
     # TODO: somewhere else in the app, allow user to put their name and record their score.
     # Optionally, we can save their final score to a real database and show a leaderboard.
 
 # Debug route used to reset the session cookie.
 @app.route('/reset_session', methods = ['GET'])
 def reset():
-    session['game'] = {'score': 0, 'player_name': None, 'cards': {} }
-    print session
+    session['game'] = {'score': 0, 'player_name': None, 'prev_cards': [], 'current_card': None }
+    print "RESET", session
     return "session cookie reset."
 
 # The main page
 @app.route('/', methods = ['GET'])
 def hello_world():
-    art_card = get_random_artifact()
-    session['game']['cards'][art_card.museum_num] = True
-    print session
-    return render_template('hello.html', card = art_card) 
+    if session['game'].get('current_card') is None:
+        art_card = get_random_artifact()
+        session['game']['current_card'] = art_card.museum_num
+        print "GOT FIRST CARD", session # debug
+        return render_template('hello.html', card = art_card)
+    else:
+        return "NO IDEA WHY FLASK LOADS TWICE ON FIRST PAGE LOAD" # Workaround for strange flask(?) behavior
 
 # Handles user date guesses
 @app.route('/', methods = ['POST'])
 def handle_guess():
     # Grab the value from the form created in the js
     guess_val = request.form.get('date_guess')
-    museum_num = request.form.get('museum_num')
-    print guess_val, museum_num # debug
-    
+    # museum_num = request.form.get('museum_num')
+    # print "FORM DATA", guess_val, museum_num # debug
     # Convert to datetime format
     guess = datetime.datetime(int(guess_val), 1, 1)
    
     # Query and create artifact card based on museum number
+    museum_num = session['game']['current_card']
     actual = get_artifact_by_museum_num(museum_num)
     # Parse actual dates into datetime format
     actual_begin = parser.parse(actual.prod_date_begin)
     actual_end = parser.parse(actual.prod_date_end)
 
     # Check the date range and return result
+    result = {}
     if guess.year >= actual_begin.year and guess.year <= actual_end.year:
-        return u'You got it right!'
+        # Update session cookie
+        session['game']['score'] += 100 # increase points
+        session['game']['prev_cards'].append(museum_num) # move current card...
+        session['game']['current_card'] = None # to list of previous cards
+        
+        result['eval'] = 'You got it right!'
     else:
-        return u'Try again'
+        result['eval'] = 'Try again.'
+    result['points'] = session['game']['score']
+    
+    print session #debug
+    
+    return json.dumps(result)
 
     # TODO: Return true/false and the actual dates (and remove the dates from the display)
 
@@ -151,6 +167,13 @@ def handle_guess():
 @app.route('/get_art', methods = ['GET'])
 def get_art():
     art_card = get_random_artifact()
+
+    # Do not use cards that have already been seen
+    while art_card.museum_num in session['game']['prev_cards']:
+        art_card = get_random_artifact()
+    # Add current card to list of seen cards in session cookie
+    session['game']['current_card'] = art_card.museum_num
+    print "PROVIDED NEW CARD", session # debug
     art_dict = art_to_dict(art_card)
     return json.dumps(art_dict)
 
