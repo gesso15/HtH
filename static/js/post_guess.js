@@ -1,3 +1,7 @@
+// Initialize modal on pageload
+$(document).ready(function() {
+  $('#myModal').modal('show');
+})
 
 // AJAX version of form submission....
 // Attach a submit handler to the form
