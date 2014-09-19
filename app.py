@@ -54,7 +54,6 @@ def query_constructor(query_terms = '(objproddate_begin_dt:[-9000-01-23T00:00:00
 # Returns artifact card object instance
 def make_artifact_card(result, index):
     art_card = Artifact_card()
-    print result
     art_card.name = result[u'docs'][index].get(u'objname_s')
     art_card.fcp = result[u'docs'][index].get(u'objfcp_s')
     art_card.prod_date_begin = result[u'docs'][index].get(u'objproddate_begin_dt')
@@ -144,7 +143,7 @@ def handle_guess():
     # Grab the value from the form created in the js
     guess_val = request.form.get('date_guess')
 
-    print guess_val
+    # print guess_val
     # museum_num = request.form.get('museum_num')
     # print "FORM DATA", guess_val, museum_num # debug
     guess = int(guess_val)
@@ -167,8 +166,8 @@ def handle_guess():
         result['game_end_flag'] = False
 
     # Update session cookie
-    session['game']['prev_cards'][museum_num] = guess.year # move current card...
-    session['game']['current_card'] = None # to list of previous cards
+    session['game']['prev_cards'][museum_num] = guess  # store user guess and cards museum number 
+    session['game']['current_card'] = None  # Set current card to None so we get a new card later
 
     # print session #debug
     # Send JSON version of result to frontend
