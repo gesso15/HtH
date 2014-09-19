@@ -64,21 +64,25 @@ def query_constructor(query_terms='(objproddate_begin_dt:' +
 
 # Returns artifact card object instance
 def make_artifact_card(result, index):
-    art_card = Artifact_card()
-    art_card.name = result[u'docs'][index].get(u'objname_s')
-    art_card.fcp = result[u'docs'][index].get(u'objfcp_s')
-    art_card.prod_date_begin = result[u'docs'][index].get(u'objproddate_begin_dt')
-    art_card.prod_date_end = result[u'docs'][index].get(u'objproddate_end_dt')
-    art_card.prod_date_s = result[u'docs'][index].get(u'objproddate_s')
-    art_card.asso_cult = result[u'docs'][index].get(u'objassoccult_ss', [])
-    art_card.object_id = result[u'docs'][index].get(u'id')
-    art_card.img_id = result[u'docs'][index].get(u'blob_ss')
-    art_card.img_URL = api_utils.imagequery(id=result[u'docs'][index][u'blob_ss'][0],
+    card = Artifact_card()
+    card.name = result[u'docs'][index].get(u'objname_s')
+    card.fcp = result[u'docs'][index].get(u'objfcp_s')
+    # Process begin and end dates into just the year
+    prod_date_begin = result[u'docs'][index].get(u'objproddate_begin_dt')
+    prod_date_end = result[u'docs'][index].get(u'objproddate_end_dt')
+    card.prod_date_begin = parser.parse(prod_date_begin).year
+    card.prod_date_end = parser.parse(prod_date_end).year
+    # Get the rest of the artifact info...
+    card.prod_date_s = result[u'docs'][index].get(u'objproddate_s')
+    card.asso_cult = result[u'docs'][index].get(u'objassoccult_ss', [])
+    card.object_id = result[u'docs'][index].get(u'id')
+    card.img_id = result[u'docs'][index].get(u'blob_ss')
+    card.img_URL = api_utils.imagequery(id=result[u'docs'][index][u'blob_ss'][0],
                                             derivative="Medium")
-    art_card.description = result[u'docs'][index].get(u'objdescr_s')
-    art_card.obj_file_code = result[u'docs'][index].get(u'objfilecode_ss')
-    art_card.museum_num = result[u'docs'][index].get(u'objmusno_s')
-    return art_card
+    card.description = result[u'docs'][index].get(u'objdescr_s')
+    card.obj_file_code = result[u'docs'][index].get(u'objfilecode_ss')
+    card.museum_num = result[u'docs'][index].get(u'objmusno_s')
+    return card
 
 
 # Returns a random artifact card
@@ -141,14 +145,12 @@ def reset():
 @app.route('/', methods=['GET'])
 def hello_world():
     if session['game'].get('current_card') is None:
-        art_card = get_random_artifact()
-        session['game']['current_card'] = art_card.museum_num
+        card = get_random_artifact()
+        session['game']['current_card'] = card.museum_num
         print "GOT FIRST CARD", session # debug
-        return render_template('hello.html', card=art_card)
     else:
-        return render_template('hello.html',
-                               card=get_artifact_by_museum_num
-                               (session['game']['current_card']))
+        card = get_artifact_by_museum_num(session['game']['current_card'])
+    return render_template('hello.html', card=card)
 
 
 # Handles user date guesses
@@ -156,24 +158,18 @@ def hello_world():
 def handle_guess():
     # Grab the value from the form created in the js
     guess_val = request.form.get('date_guess')
-
-    # print guess_val
-    # museum_num = request.form.get('museum_num')
-    # print "FORM DATA", guess_val, museum_num # debug
+    # print guess_val #debug
     guess = int(guess_val)
 
     # Query and create artifact card based on museum number
     museum_num = session['game']['current_card']
     actual = get_artifact_by_museum_num(museum_num)
-    # Parse actual dates into datetime format
-    actual_begin = parser.parse(actual.prod_date_begin)
-    actual_end = parser.parse(actual.prod_date_end)
 
     # Collect data to sent to frontend.
     result = {}
     result['guess'] = guess
-    result['date_begin'] = actual_begin.year
-    result['date_end'] = actual_end.year
+    result['date_begin'] = actual.prod_date_begin
+    result['date_end'] = actual.prod_date_end
 
     # Update session cookie
     # Store user guess and card's museum number
@@ -187,9 +183,7 @@ def handle_guess():
     else:
         result['game_end_flag'] = False
 
-
-
-    # print session #debug
+    print session #debug
     # Send JSON version of result to frontend
     return json.dumps(result)
 
@@ -209,7 +203,7 @@ def get_art():
     return json.dumps(art_dict)
 
 
-# register user name
+# Register user name
 @app.route('/register', methods=['POST'])
 def register_name():
     player_name = request.form.get('name')
@@ -217,6 +211,19 @@ def register_name():
     print "REGISTERED PLAYER AS ", player_name  # debug
     print session  # debug
     return "post success"
+
+
+# Provides the game session information
+@app.route('/get_score', methods=['GET'])
+def get_score():
+    template_values = []
+    for museum_num in session['game']['prev_cards']:
+        card = get_artifact_by_museum_num(museum_num)
+        guess = session['game']['prev_cards'][museum_num]
+        card.guess = guess
+        template_values.append(card)
+        print template_values
+    return render_template('_player_game_data.html', cards=template_values)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,16 @@
+{% for card in cards %}
+<div>
+	<h1 align="left">{{ card.name }}</h1>
+	<p align="left">Actual date range: <span>{{ card.prod_date_begin }}</span>-<span>{{ card.prod_date_end }}</span></p>
+	<p align="left">Your guess: <span>{{ card.guess }}</span></p>
+	<p align="left">Points: <span>TBD</span></p>
+	<div id="main-img-block">
+		<img src={{ card.img_URL }}/>
+	</div>
+</div>
+{% endfor %}
+
+<div>
+	<h1 align="left">Total Points</h1>
+	<p align="left">TBD</p>
+</div>

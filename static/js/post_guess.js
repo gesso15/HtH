@@ -2,6 +2,8 @@
 $(document).ready(function() {
   $('#myModal').modal('show');
   $('#next-artifact').hide();
+  $('#final-score').hide();
+  $('#replay').hide();
 })
 
 // Year selection magic
@@ -36,19 +38,22 @@ function postGuess(user_guess) {
       date_end = data['date_end'], 
       game_end_flag = data['game_end_flag'];
 
+      // Respond to user
       var reply = "Your guess: " + guess + ". Correct range: " + date_begin + "-" + date_end;
-      
+      // If the game isn't over, show the Next Artifact button.
       if (game_end_flag == false){
         $('#next-artifact').show();
       }
+      // If the game is over. Thank the user and show the final score button.
       else {
         reply += " Thanks for playing!";
+        $('#left-box').hide();
+        $('#final-score').show();
       }
-
+      // In either case, hide the user's guess and submit button. Display response text.
       $('#user_guess').hide(); 
       $('#guess-submit').hide();
       $('#result').text(reply);
-
     },
     error:function(){
       // If the request failed, give feedback to user (replace loading gif with failure message)
@@ -142,3 +147,26 @@ $('#nameForm').submit(function(event){
     }
   });
 });
+
+
+// AJAX retrieval of player's score
+function view_score() {
+  $.ajax({
+    url : "/get_score",
+    type: "GET",
+    data : "",
+    success: function(server_data, textStatus, jqXHR)
+    {
+      var data = server_data;
+      console.log(data); //debug line
+      $('#left-box').html(data);
+      $('#left-box').show();
+      $('#final-score').hide();
+      $('#replay').show();
+    },
+    error: function (jqXHR, textStatus, errorThrown)
+    {
+      console.log("get fail"); // debug line
+    }
+  });
+}
