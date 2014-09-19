@@ -117,7 +117,7 @@ Segment.prototype.draw = function() {
 
 // Selector class for Timeline GUI widget.
 function Selector(tl) {
-	this.year = 0;
+	this.year = null;
 	this.timeline = tl;
 	this.xOffset = 0; // Hacky.
 	this.visible = false;
