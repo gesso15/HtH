@@ -136,7 +136,12 @@ Selector.prototype.draw = function() {
 	translate(this.xOffset, -32);
 	stroke(this.c);
 	fill(this.c);
-	text(this.year, -8, -3);
+	
+	// Show BC years as BC instead of negative.
+	var s = abs(this.year).toString();
+	if (this.year < 0) { s += ' BC'; }
+
+	text(s, -8, -3);
 	strokeWeight(2);
 	strokeCap(ROUND);
 	line(0, 0, 0, 30);
