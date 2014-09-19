@@ -17,6 +17,7 @@ $('#guessForm').submit(function(event){
     formURL = $form.attr( "action" );
     console.log("User guessed: " + user_guess); // debug
     post_guess(formURL, user_guess);
+    mainLine.selector.reset();
   }
   else {
     console.log("WTF user did not select a date?!")
