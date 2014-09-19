@@ -51,6 +51,7 @@ def query_constructor(query_terms = '(objproddate_begin_dt:[-9000-01-23T00:00:00
 # Returns artifact card object instance
 def make_artifact_card(result, index):
     art_card = Artifact_card()
+    print result
     art_card.name = result[u'docs'][index].get(u'objname_s')
     art_card.fcp = result[u'docs'][index].get(u'objfcp_s')
     art_card.prod_date_begin = result[u'docs'][index].get(u'objproddate_begin_dt')
@@ -125,7 +126,7 @@ def hello_world():
         print "GOT FIRST CARD", session # debug
         return render_template('hello.html', card = art_card)
     else:
-        return "NO IDEA WHY FLASK LOADS TWICE ON FIRST PAGE LOAD" # Workaround for strange flask(?) behavior
+        return render_template('hello.html', card = get_artifact_by_museum_num(session['game']['current_card']))
 
 # Handles user date guesses
 @app.route('/', methods = ['POST'])
