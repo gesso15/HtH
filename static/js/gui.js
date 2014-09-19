@@ -135,6 +135,13 @@ Selector.prototype.setYear = function(year) {
 	this.xOffset = this.timeline.yearToPos(year);
 }
 
+Selector.prototype.yearString = function() {
+	// Show BC years as BC instead of negative.
+	var s = abs(this.year).toString();
+	if (this.year < 0) { s += ' BC'; }
+	return s;
+}
+
 Selector.prototype.draw = function() {
 	if (!this.visible) { return; }
 	push();
@@ -142,12 +149,7 @@ Selector.prototype.draw = function() {
 	translate(this.xOffset, -32);
 	stroke(this.c);
 	fill(this.c);
-	
-	// Show BC years as BC instead of negative.
-	var s = abs(this.year).toString();
-	if (this.year < 0) { s += ' BC'; }
-
-	text(s, -8, -3);
+	text(this.yearString(), -8, -3);
 	strokeWeight(2);
 	strokeCap(ROUND);
 	line(0, 0, 0, 30);
