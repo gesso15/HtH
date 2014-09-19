@@ -1,8 +1,10 @@
 // Initialize modal on pageload
 $(document).ready(function() {
   $('#myModal').modal('show');
+  $('#next-artifact').hide();
 })
 
+// Year selection magic
 function submitGuess(){  
   user_guess = mainLine.selector.year;
   if(user_guess != null){
@@ -16,8 +18,8 @@ function submitGuess(){
   }
 }
 
+// AJAX date guess post request.
 function postGuess(user_guess) {
-  // the AJAX part
   $.ajax({
     type: 'POST', // HTTP request method (Send the data using post)
     url: '/', // Where to send the data
@@ -47,7 +49,10 @@ function reprimandUser() {
 }
 
 function replyGuess() {
-    $('#result').text("Thank you for your submission."); 
+    $('#result').text("Thank you for your submission.");
+    $('#next-artifact').show();
+    $('#user_guess').hide(); 
+    $('#guess-submit').hide(); 
 }
 
 function displayGuess(current_guess) {
@@ -83,6 +88,8 @@ function get_next_art() {
       $("#answer").hide(); // make sure answer is hidden again
       $("#result").empty(); // remove feedback from previous card guess
       $("#user_guess").empty(); // remove feedback from previous card guess
+      $("#guess-submit").show(); // show guess submit button
+      $('#next-artifact').hide(); // hide next artifact button
     },
     error: function (jqXHR, textStatus, errorThrown)
     {
