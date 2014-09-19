@@ -38,9 +38,11 @@ function post_guess(formURL, user_guess) {
     success:function(server_data){
       var data = JSON.parse(server_data);
       console.log(data); // debug
-      // If the request was successful, replace the loading gif with the data received
-      $('#result').empty().append(data["eval"]);
-      $("#money-box > p > span").text(data["points"]);
+      var guess = data['guess'],
+	  date_begin = data['date_begin'], 
+	  date_end = data['date_end'], 
+	  game_end_flag = data['game_end_flag']; 
+      
     },
     error:function(){
       // If the request failed, give feedback to user (replace loading gif with failure message)
