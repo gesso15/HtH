@@ -13,7 +13,7 @@ from pahmasettings import FLASK_SESSION_SECRET
 app = Flask(__name__)
 app.config.update(
     SECRET_KEY= FLASK_SESSION_SECRET, # for session cookie
-    SESSION_COOKIE_HTTPONLY = False
+    # SESSION_COOKIE_HTTPONLY = False # put this back if things break!
 )
 
 app.jinja_env.undefined = jinja2.StrictUndefined
