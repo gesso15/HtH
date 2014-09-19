@@ -3,46 +3,37 @@ $(document).ready(function() {
   $('#myModal').modal('show');
 })
 
-// AJAX version of answer form submission...
-// Attach a submit handler to the answer form
-$('#guessForm').submit(function(event){
-  // Stop form from submitting normally (which would trigger page reload)
-  event.preventDefault();
-
+function submitGuess(){  
   user_guess = mainLine.selector.year;
-  // Verify that the field is populated
   if(user_guess != null){
-    // Get some values from elements on the page
-    var $form = $(this),
-    formURL = $form.attr( "action" );
     console.log("User guessed: " + user_guess); // debug
-    post_guess(formURL, user_guess);
+    postGuess(user_guess);
     mainLine.selector.reset();
   }
   else {
-    console.log("WTF user did not select a date?!")
-    reprimand_user();
+    console.log("WTF user did not select a date?!");
+    reprimandUser();
   }
-});
+}
 
-function post_guess(formURL, user_guess) {
+function postGuess(user_guess) {
   // the AJAX part
   $.ajax({
     type: 'POST', // HTTP request method (Send the data using post)
-    url: formURL, // Where to send the data
+    url: '/', // Where to send the data
     data: {'date_guess': user_guess}, // Data to be sent
     beforeSend:function(){
       // While we wait to get data back from the server, put a loading gif on the page
       $('#result').html('<div class="loading"><img src="http://www.kyleschaeffer.com/wp-content/uploads/2010/04/loading.gif" alt="Loading..." /></div>');
     },
     success:function(server_data){
+      replyGuess();
       var data = JSON.parse(server_data);
       console.log(data); // debug
       var guess = data['guess'],
-	  date_begin = data['date_begin'], 
-	  date_end = data['date_end'], 
-	  game_end_flag = data['game_end_flag']; 
-      
+      date_begin = data['date_begin'], 
+      date_end = data['date_end'], 
+      game_end_flag = data['game_end_flag']; 
     },
     error:function(){
       // If the request failed, give feedback to user (replace loading gif with failure message)
@@ -51,14 +42,21 @@ function post_guess(formURL, user_guess) {
   });
 }
 
-// AJAX retrieval of new artifact
-function reprimand_user() {
-    // remove feedback from previous card guess
+function reprimandUser() {
     $('#result').text("WTF you didn't select a date?!"); 
 }
 
+function replyGuess() {
+    $('#result').text("Thank you for your submission."); 
+}
+
+function displayGuess(current_guess) {
+    $('#user_guess').text(current_guess); 
+}
+
+
 // Toggle date info for debugging (show/hide)
-function toggle_visibility(id) {
+function toggleVisibility(id) {
   $(id).toggle();
 }
 
@@ -83,7 +81,8 @@ function get_next_art() {
       $("#answer > p:nth-child(2) > span").text(data["prod_date_end"]); // prod_date_end
       $("#answer > p:nth-child(3) > span").text(data["prod_date_s"]); // prod_date_s
       $("#answer").hide(); // make sure answer is hidden again
-      $('#result').empty(); // remove feedback from previous card guess
+      $("#result").empty(); // remove feedback from previous card guess
+      $("#user_guess").empty(); // remove feedback from previous card guess
     },
     error: function (jqXHR, textStatus, errorThrown)
     {
