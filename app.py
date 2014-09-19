@@ -105,7 +105,7 @@ def art_to_dict(art_obj):
 # set up session cookie with some default fields when the user first visits the app.
 @app.before_first_request
 def setup_session():
-    session['game'] = {'score': 0, 'player_name': None, 'prev_cards': [], 'current_card': None }
+    session['game'] = {'score': 0, 'player_name': None, 'prev_cards': {}, 'current_card': None }
     print "SETTING UP SESSION", session
     # TODO: somewhere else in the app, allow user to put their name and record their score.
     # Optionally, we can save their final score to a real database and show a leaderboard.
@@ -113,7 +113,7 @@ def setup_session():
 # Debug route used to reset the session cookie.
 @app.route('/reset_session', methods = ['GET'])
 def reset():
-    session['game'] = {'score': 0, 'player_name': None, 'prev_cards': [], 'current_card': None }
+    session['game'] = {'score': 0, 'player_name': None, 'prev_cards': {}, 'current_card': None }
     print "RESET", session
     return "session cookie reset."
 
@@ -150,7 +150,7 @@ def handle_guess():
     if guess.year >= actual_begin.year and guess.year <= actual_end.year:
         # Update session cookie
         session['game']['score'] += 100 # increase points
-        session['game']['prev_cards'].append(museum_num) # move current card...
+	session['game']['prev_cards'][museum_num] = guess.year # move current card...
         session['game']['current_card'] = None # to list of previous cards
         # Give feedback to user.
         result['eval'] = 'You got it right!'
