@@ -169,22 +169,25 @@ def handle_guess():
     actual_begin = parser.parse(actual.prod_date_begin)
     actual_end = parser.parse(actual.prod_date_end)
 
-    # Check the date range and return result
+    # Collect data to sent to frontend.
     result = {}
     result['guess'] = guess
     result['date_begin'] = actual_begin.year
     result['date_end'] = actual_end.year
+
+    # Update session cookie
+    # Store user guess and card's museum number
+    session['game']['prev_cards'][museum_num] = guess
+    # Set current card to None so we get a new card later
+    session['game']['current_card'] = None
+
     print len(session['game']['prev_cards'])  # debug
-    if len(session['game']['prev_cards']) < NUM_ARTIFACTS_IN_EXHIBIT:
+    if len(session['game']['prev_cards']) >= NUM_ARTIFACTS_IN_EXHIBIT:
         result['game_end_flag'] = True
     else:
         result['game_end_flag'] = False
 
-    # Update session cookie
-    # store user guess and cards museum number
-    session['game']['prev_cards'][museum_num] = guess
-    # Set current card to None so we get a new card later
-    session['game']['current_card'] = None
+
 
     # print session #debug
     # Send JSON version of result to frontend

@@ -29,13 +29,26 @@ function postGuess(user_guess) {
       $('#result').html('<div class="loading"><img src="http://www.kyleschaeffer.com/wp-content/uploads/2010/04/loading.gif" alt="Loading..." /></div>');
     },
     success:function(server_data){
-      replyGuess();
       var data = JSON.parse(server_data);
       console.log(data); // debug
       var guess = data['guess'],
       date_begin = data['date_begin'], 
       date_end = data['date_end'], 
-      game_end_flag = data['game_end_flag']; 
+      game_end_flag = data['game_end_flag'];
+
+      var reply = "Your guess: " + guess + ". Correct range: " + date_begin + "-" + date_end;
+      
+      if (game_end_flag == false){
+        $('#next-artifact').show();
+      }
+      else {
+        reply += " Thanks for playing!";
+      }
+
+      $('#user_guess').hide(); 
+      $('#guess-submit').hide();
+      $('#result').text(reply);
+
     },
     error:function(){
       // If the request failed, give feedback to user (replace loading gif with failure message)
@@ -46,13 +59,6 @@ function postGuess(user_guess) {
 
 function reprimandUser() {
     $('#result').text("WTF you didn't select a date?!"); 
-}
-
-function replyGuess() {
-    $('#result').text("Thank you for your submission.");
-    $('#next-artifact').show();
-    $('#user_guess').hide(); 
-    $('#guess-submit').hide(); 
 }
 
 function displayGuess(current_guess) {
