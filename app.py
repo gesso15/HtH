@@ -1,5 +1,5 @@
 from itertools import islice
-from flask import Flask, request, session, render_template
+from flask import Flask, request, session, render_template, redirect
 import requests
 import json
 import jinja2
@@ -133,12 +133,12 @@ def setup_session():
     # Optionally, we can save their final score to a real database and show a leaderboard.
 
 
-# Debug route used to reset the session cookie.
+# Resets the session cookie before starting a new game.
 @app.route('/reset_session', methods=['GET'])
 def reset():
     session['game'] = {'score': 0, 'player_name': None, 'prev_cards': {}, 'current_card': None}
     print "RESET", session
-    return "session cookie reset."
+    return redirect('/')
 
 
 # The main page
