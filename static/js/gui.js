@@ -124,6 +124,12 @@ function Selector(tl) {
 	this.c = color(0, 0, 255);
 }
 
+Selector.prototype.reset = function() {
+	this.year = null;
+	this.xOffset = 0;
+	this.visible = false;
+}
+
 Selector.prototype.setYear = function(year) {
 	this.year = year;
 	this.xOffset = this.timeline.yearToPos(year);
