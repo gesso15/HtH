@@ -6,17 +6,21 @@ import jinja2
 import random
 import api_utils
 import dateutil.parser as parser
-import datetime
 from pahmasettings import FLASK_SESSION_SECRET
 # import model # for database. not in use yet
 
+# Number of objects to return from search
+ROWS = 100
+NUM_ARTIFACTS_IN_EXHIBIT = 5
+
 app = Flask(__name__)
 app.config.update(
-    SECRET_KEY= FLASK_SESSION_SECRET, # for session cookie
+    SECRET_KEY=FLASK_SESSION_SECRET,  # for session cookie
     # SESSION_COOKIE_HTTPONLY = False # put this back if things break!
 )
 
 app.jinja_env.undefined = jinja2.StrictUndefined
+
 
 # Data structure to capture results from Hearst API queries
 class Artifact_card:
@@ -34,8 +38,6 @@ class Artifact_card:
         obj_file_code = None
         museum_num = None
 
-# Number of objects to return from search
-ROWS = 100
 
 ###
 # Constructs Hearst API queries and returns results. 
@@ -47,6 +49,7 @@ def query_constructor(query_terms = '(objproddate_begin_dt:[-9000-01-23T00:00:00
     # result = query(q='''objtype_s:"archaeology" AND objproddate_txt:(+Manchu +(Qing) +Dynasty) AND blob_ss:[* TO *]''', fl="blob_ss,objname_s,objproddate_txt", rows=ROWS+1)['response']
     # result = api_utils.query(q='''objtype_s:"ethnography" AND (objfilecode_ss:"2.2 Personal Adornments and Accoutrements") AND blob_ss:[* TO *]''', fl="", rows=ROWS+1)['response']
     return api_utils.query(q = query_terms, fl = search_filter, rows = max_results)['response']
+
 
 # Returns artifact card object instance
 def make_artifact_card(result, index):
@@ -66,6 +69,7 @@ def make_artifact_card(result, index):
     art_card.museum_num = result[u'docs'][index].get(u'objmusno_s')
     return art_card
 
+
 # Returns a random artifact card
 def get_random_artifact():
     result = query_constructor(max_results = ROWS)
@@ -74,11 +78,13 @@ def get_random_artifact():
     card = make_artifact_card(result, rand_index)
     return card
 
+
 # Returns artifact card with specific museum_num
 def get_artifact_by_museum_num(museum_num):
     result = query_constructor(u'objmusno_s:%s' % museum_num)
     card = make_artifact_card(result, 0)
     return card
+
 
 # Turns an artifact card object instance into something that is JSON serializable
 # and can be sent in an HTTP response
@@ -101,6 +107,7 @@ def art_to_dict(art_obj):
 
 #==== ROUTES (aka CONTROLLERS / HANDLERS) ===
 
+
 # oh lookie! a session cookie! (use this to store player info?)
 # set up session cookie with some default fields when the user first visits the app.
 @app.before_first_request
@@ -110,12 +117,14 @@ def setup_session():
     # TODO: somewhere else in the app, allow user to put their name and record their score.
     # Optionally, we can save their final score to a real database and show a leaderboard.
 
+
 # Debug route used to reset the session cookie.
 @app.route('/reset_session', methods = ['GET'])
 def reset():
     session['game'] = {'score': 0, 'player_name': None, 'prev_cards': {}, 'current_card': None }
     print "RESET", session
     return "session cookie reset."
+
 
 # The main page
 @app.route('/', methods = ['GET'])
@@ -128,6 +137,7 @@ def hello_world():
     else:
         return render_template('hello.html', card = get_artifact_by_museum_num(session['game']['current_card']))
 
+
 # Handles user date guesses
 @app.route('/', methods = ['POST'])
 def handle_guess():
@@ -135,8 +145,7 @@ def handle_guess():
     guess_val = request.form.get('date_guess')
     # museum_num = request.form.get('museum_num')
     # print "FORM DATA", guess_val, museum_num # debug
-    # Convert to datetime format
-    guess = datetime.datetime(int(guess_val), 1, 1)
+    guess = int(guess_val)
    
     # Query and create artifact card based on museum number
     museum_num = session['game']['current_card']
@@ -147,22 +156,22 @@ def handle_guess():
 
     # Check the date range and return result
     result = {}
-    if guess.year >= actual_begin.year and guess.year <= actual_end.year:
-        # Update session cookie
-        session['game']['score'] += 100 # increase points
-	session['game']['prev_cards'][museum_num] = guess.year # move current card...
-        session['game']['current_card'] = None # to list of previous cards
-        # Give feedback to user.
-        result['eval'] = 'You got it right!'
+    result['guess'] = guess
+    result['date_begin'] = actual_begin.year
+    result['date_end'] = actual_end.year
+    if len(session['game']['prev_cards']) <= NUM_ARTIFACTS_IN_EXHIBIT:
+        result['game_end_flag'] = True
     else:
-        result['eval'] = 'Try again.'
-    # Include score in response
-    result['points'] = session['game']['score']
-    print session #debug
+        result['game_end_flag'] = False
+
+    # Update session cookie
+    session['game']['prev_cards'][museum_num] = guess.year # move current card...
+    session['game']['current_card'] = None # to list of previous cards
+
+    # print session #debug
     # Send JSON version of result to frontend
     return json.dumps(result)
 
-    # TODO: Return true/false and the actual dates (and remove the dates from the display)
 
 # Gets data for a new artifact and sends it to the frontend as JSON
 @app.route('/get_art', methods = ['GET'])
