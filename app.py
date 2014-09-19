@@ -133,6 +133,8 @@ def hello_world():
 def handle_guess():
     # Grab the value from the form created in the js
     guess_val = request.form.get('date_guess')
+
+    print guess_val
     # museum_num = request.form.get('museum_num')
     # print "FORM DATA", guess_val, museum_num # debug
     # Convert to datetime format

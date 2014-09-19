@@ -3,25 +3,33 @@ $(document).ready(function() {
   $('#myModal').modal('show');
 })
 
-// AJAX version of answer form submission....
+// AJAX version of answer form submission...
 // Attach a submit handler to the answer form
 $('#guessForm').submit(function(event){
-  
   // Stop form from submitting normally (which would trigger page reload)
   event.preventDefault();
-  // Get some values from elements on the page
-  var $form = $(this),
-  guess = $form.find( "input[name='date_guess']" ).val(),
-  museum_num = $("#left-box > p:nth-child(5) > span").text(), // grabbing this value from here for now. need to get it from session cookie instead eventually...
-  formURL = $form.attr( "action" );
-  console.log(guess); // debug
-  console.log(museum_num); //debug
-  
+
+  user_guess = mainLine.selector.year;
+  // Verify that the field is populated
+  if(user_guess != null){
+    // Get some values from elements on the page
+    var $form = $(this),
+    formURL = $form.attr( "action" );
+    console.log("User guessed: " + user_guess); // debug
+    post_guess(formURL, user_guess);
+  }
+  else {
+    console.log("WTF user did not select a date?!")
+    reprimand_user();
+  }
+});
+
+function post_guess(formURL, user_guess) {
   // the AJAX part
   $.ajax({
     type: 'POST', // HTTP request method (Send the data using post)
     url: formURL, // Where to send the data
-    data: {'date_guess': guess, 'museum_num': museum_num}, // Data to be sent
+    data: {'date_guess': user_guess}, // Data to be sent
     beforeSend:function(){
       // While we wait to get data back from the server, put a loading gif on the page
       $('#result').html('<div class="loading"><img src="http://www.kyleschaeffer.com/wp-content/uploads/2010/04/loading.gif" alt="Loading..." /></div>');
@@ -38,8 +46,13 @@ $('#guessForm').submit(function(event){
       $('#result').html('<p class="error"><strong>Oops!</strong> Try that again in a few moments.</p>');
     }
   });
-});
+}
 
+// AJAX retrieval of new artifact
+function reprimand_user() {
+    // remove feedback from previous card guess
+    $('#result').text("WTF you didn't select a date?!"); 
+}
 
 // Toggle date info for debugging (show/hide)
 function toggle_visibility(id) {
