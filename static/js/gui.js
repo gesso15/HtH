@@ -33,6 +33,7 @@ function mouseClicked() {
 	if ( mainLine.posOver(mouseX, mouseY) ) {
 		mainLine.selector.setYear(ghostSelector.year);
 		mainLine.selector.visible = true;
+		displayGuess(mainLine.selector.yearString());
 	}
 }
 
