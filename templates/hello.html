@@ -4,16 +4,16 @@
 
 <div id="left-box">
 	<div id="placard">
-		<h1 align="left">{{ card.name }}</h1>
+		<h1 id="artifact-name" align="left">{{ card.name }}</h1>
 	</div>
 	<div id="artifact-info">
-		<p align="left">Location of discovery:<span>{{ card.fcp }}</span></p>
-		<p align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</span></p>
-		<p align="left">Verbatim description: <span>{{ card.description }}</span></p>
-		<p align="left"><span>{{ card.museum_num }}</span></p>
+		<p id="artifact-location" align="left">Location of discovery:<span>{{ card.fcp }}</span></p>
+		<p id="artifact-culture" align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</span></p>
+		<p id="artifact-description" align="left">Verbatim description: <span>{{ card.description }}</span></p>
+		<p id="artifact-museum-num" align="left"><span>{{ card.museum_num }}</span></p>
 	</div>
 	<div id="main-img-block">
-		<img src={{ card.img_URL }}/>
+		<img id="artifact-image" src={{ card.img_URL }}/>
 	</div>
 </div>
 
