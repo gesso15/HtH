@@ -7,6 +7,12 @@ body {
 	font-size: 36px;
 }
 
+#welcome {
+	font-family: 'Calligraffitti', cursive;
+	font-size: 36px;
+	margin-top: 10px;
+}
+
 #left-box, #right-box {
 	min-height: 400px;
 	width: 400px;
@@ -36,13 +42,21 @@ body {
 	background-image: url("../imgs/retina_wood.png");
 }
 
+#placard h1 {
+	text-align: center;
+	padding: 5px;
+}
+
 #artifact-info {
 	font-family: 'Calligraffitti', cursive;
 	font-size: 18px;
 	height: 300px;
 	width: 350px;
 	margin: 10px auto;
-	background-image: url("PUT IMG HERE");
+	background-image: url("../imgs/notebook.jpg");
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-top: 30px;
 }
 
 #main-img-block img {
@@ -65,6 +79,10 @@ body {
 	background-color: gray;
 	margin: 10px auto;
 	border-radius: 10px;
+}
+
+#instructions p {
+	padding: 10px;
 }
 
 #buttons-box {
