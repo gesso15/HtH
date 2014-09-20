@@ -1,3 +1,11 @@
+body {
+	font-family: 'Cinzel', serif;
+}
+
+.modal-title {
+	font-family: 'Calligraffitti', cursive;
+	font-size: 36px;
+}
 
 #left-box, #right-box {
 	min-height: 400px;
@@ -8,6 +16,7 @@
 	margin-top: 20px;
 	margin-bottom: 20px;
 	text-align: center;
+	background-image: url("../imgs/whitey.png");
 }
 
 #left-box {
@@ -18,7 +27,22 @@
 #right-box {
 	float:right;
 	margin-right: 100px;
+}
 
+#placard {
+	height: 50px;
+	width: 300px;
+	margin: 10px auto;
+	background-image: url("../imgs/retina_wood.png");
+}
+
+#artifact-info {
+	font-family: 'Calligraffitti', cursive;
+	font-size: 18px;
+	height: 300px;
+	width: 350px;
+	margin: 10px auto;
+	background-image: url("PUT IMG HERE");
 }
 
 #main-img-block img {
