@@ -10,7 +10,7 @@ function setup() {
 	mainLine.addSegment(new Segment(1901, 2014, "Modern", 255, 75, mainLine));
 
 	pin = new Pin(null, mainLine, color(0, 153, 153), color(220, 240, 240), 30);
-	mainLine.activePin = pin;
+	mainLine.setActivePin(pin);
 }
 
 function draw() {
@@ -23,9 +23,7 @@ function mouseMoved() {
 }
 
 function mouseClicked() {
-	if ( mainLine.posOver(mouseX, mouseY) ) {
-
-	}
+	mainLine.mouseClicked();
 }
 
 // Helper Functions
@@ -37,7 +35,7 @@ function yearToString(year) {
 }
 
 function mouseOver(box) {
-// The 'box' must have xPos, yPos, width, and height.
+// The 'box' must have posX, posY, width, and height.
 	if ( mouseX < box.posX ) { return false; }
 	if ( mouseX > box.posX + box.width ) { return false; }
 	if ( mouseY < box.posY ) { return false; }
@@ -59,37 +57,47 @@ function Timeline(x, y, width, height, start, end) {
 	this.segments = [];
 	this.pins = [];		// Let's call the objects on the timeline 'pins'.
 	this.activePin = null;
-	this.plusButton = new Button("+", 30, 30);
-	this.minusButton = new Button("-", 30, 30);
-	this.doneButton = new Button ("CONFIRM", 100, 30);
+	this.plusButton = new Button("+", 0, 0, 20, 20, false);
+	this.minusButton = new Button("-", 0, 0, 20, 20, false);
+	this.doneButton = new Button ("CONFIRM", 0, 0, 50, 15, false);
 }
 
 Timeline.prototype.draw = function() {
 	push();
 	translate(this.posX, this.posY);
+	
 	push();
 	for (var i in this.segments) {
 		this.segments[i].draw();
 		translate(this.segments[i].width, 0);
 	}
 	pop();
-	this.activePin.draw();
+
+	push();
+	translate(-this.posX, -this.posY);
+	this.plusButton.draw();
+	this.minusButton.draw();
+	this.doneButton.draw();
+	pop();
+	
 	for (var i in this.pins) { this.pins[i].draw(); }
+	this.activePin.draw();
+	
 	pop();
 };
 
 Timeline.prototype.mouseMoved = function() {
 	if ( mouseOver(this) && this.activePin != null ) {
-		this.activePin.setYear(this.posToYear(mouseX));
+		this.moveActivePinTo(this.posToYear(mouseX));
 	}
 };
 
 Timeline.prototype.mouseClicked = function() {
 	if ( mouseOver(this.plusButton) && this.activePin != null ) {
-		this.activePin.setYear(this.activePin.year + 1);
+		this.moveActivePinTo(this.activePin.year + 1);
 	}
 	if ( mouseOver(this.minusButton) && this.activePin != null ) {
-		this.activePin.setYear(this.activePin.year - 1);
+		this.moveActivePinTo(this.activePin.year - 1);
 	}
 	if ( mouseOver(this.doneButton) && this.activePin != null ) {
 		// TODO(jettisonjoe): Make a done button and stuff for it to do.
@@ -102,6 +110,32 @@ Timeline.prototype.addSegment = function(seg) {
 
 Timeline.prototype.addPin = function(pin) {
 	this.pins.push(pin);
+};
+
+Timeline.prototype.setActivePin = function(pin) {
+	this.activePin = pin;
+	this.updateButtonPos();
+	this.plusButton.visible = true;
+	this.minusButton.visible = true;
+	this.doneButton.visible = true;
+};
+
+Timeline.prototype.moveActivePinTo = function(year) {
+	this.activePin.setYear(year);
+	this.updateButtonPos();
+};
+
+Timeline.prototype.updateButtonPos = function() {
+	var pin = this.activePin;
+	this.plusButton.moveTo(
+		this.posX + pin.xOffset + pin.width/2 + 6,
+		this.posY + this.height + pin.yOffset - this.plusButton.height/2);
+	this.minusButton.moveTo(
+		this.posX + pin.xOffset - pin.width/2 - 6 - this.minusButton.width,
+		this.posY + this.height + pin.yOffset - this.minusButton.height/2);
+	this.doneButton.moveTo(
+		this.posX + pin.xOffset - this.doneButton.width/2,
+		this.posY + this.height + pin.yOffset + this.doneButton.height + 20);
 };
 
 Timeline.prototype.posToYear = function(x) {
@@ -193,8 +227,8 @@ Pin.prototype.setYear = function(year) {
 
 
 function Button(label, x, y, width, height, visible) {
-	this.xPos = x;
-	this.yPos = y;
+	this.posX = x;
+	this.posY = y;
 	this.label = label;
 	this.width = width;
 	this.height = height;
@@ -204,8 +238,14 @@ function Button(label, x, y, width, height, visible) {
 Button.prototype.draw = function() {
 	if ( !this.visible ) { return; }
 	push();
+	translate(this.posX, this.posY);
+	noFill();
 	rect(0, 0, this.width, this.height);
-	translate(this.height/2 - 30, 0);
-	text(label, 0, 0);
+	text(this.label, 2, this.height-5);
 	pop();
+};
+
+Button.prototype.moveTo = function(x, y) {
+	this.posX = x;
+	this.posY = y;
 };
