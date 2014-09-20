@@ -2,13 +2,13 @@ var mMuseumShipment;
 var num_crates = 5;
 
 //probably take these variables out
-var img;
-var useImage = false;
+// var img;
+// var useImage = false;
 
 function setup() {
 	createCanvas(windowWidth/2, (2*windowHeight)/3);
 	mMuseumShipment = new MuseumShipment(num_crates);
-	img = loadImage("crate.png");
+	//img = loadImage("crate.png");
 }
 
 function draw() {
@@ -53,14 +53,9 @@ function Crate(x, y, c) {
 Crate.prototype.draw = function() {
 	push();
 	translate(this.posX, this.posY);
-
 	//draw the crate image to the screen
-	if(useImage){
-		image(img, 0, 0, img.width/2, img.height/2);
-	}
-	else {
-		Crate.prototype.drawCrate(this.crateSize);
-	}
+	//image(img, 0, 0, img.width/2, img.height/2);
+	Crate.prototype.drawCrate(this.crateSize);
 	pop();
 }
 
@@ -69,8 +64,6 @@ Crate.prototype.drawCrate = function(crate_size) {
 
 	// Draw the vertical wood planks
 	plankWidth = crate_size/6;
-	// stroke(240,230,200);
-	// strokeWeight(0.5);
 	var delta = [3, 5, 10, 4, 7, 5]
 	for (var i = 0; i*plankWidth < crate_size; i++) {
 		//var r = random(10);
@@ -95,4 +88,3 @@ Crate.prototype.drawCrate = function(crate_size) {
 	strokeWeight(1);
 	text("F R A G I LE", plankWidth, plankWidth, crate_size, plankWidth);
 }
-
