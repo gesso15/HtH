@@ -45,10 +45,8 @@ class Artifact_card:
 # fl = filter for returned things from search
 # rows = number of objects to return
 ###
-def query_constructor(query_terms='(objproddate_begin_dt:' +
-                      '[-9000-01-23T00:00:00Z TO 1931-01-01T00:00:00Z]' +
-                      'OR objproddate_end_dt:' +
-                      '[-9000-01-01T00:00:00Z TO 1931-01-01T00:00:00Z])' +
+def query_constructor(query_terms='objproddate_begin_dt:[* TO *]' +
+                      'AND objproddate_end_dt:[* TO *]' +
                       'AND blob_ss:[* TO *]',
                       search_filter="objname_s, objfcp_s," +
                       "objproddate_begin_dt, objproddate_end_dt," +
