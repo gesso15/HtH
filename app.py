@@ -91,6 +91,20 @@ def get_random_artifact():
     card = make_artifact_card(result, rand_index)
     return card
 
+# Returns a list of random artifact cards
+def get_random_artifacts():
+    result = query_constructor(max_results=ROWS)
+    #print "NUMBER OF RESULTS: ", len(result[u'docs'])  # debug
+    cards = list()
+    indexes = list()
+    for x in range(0,NUM_ARTIFACTS_IN_EXHIBIT):
+        rand_index = random.randint(0, len(result[u'docs'])-1)
+	while rand_index in indexes:
+            rand_index = random.randint(0, len(result[u'docs'])-1)
+	indexes.append(rand_index)
+        cards.append(make_artifact_card(result, rand_index))
+    return cards
+
 
 # Returns artifact card with specific museum_num
 def get_artifact_by_museum_num(museum_num):
