@@ -7,8 +7,8 @@
 		<h1 id="artifact-name" align="left">{{ card.name }}</h1>
 	</div>
 	<div id="artifact-info">
-		<p id="artifact-location" align="left">Location of discovery:<span>{{ card.fcp }}</span></p>
-		<p id="artifact-culture" align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</span></p>
+		<p id="artifact-location" align="left">Location of discovery: <span>{{ card.fcp }}</span></p>
+		<p id="artifact-culture" align="left">Associated culture: <span>{% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</span></p>
 		<p id="artifact-description" align="left">Verbatim description: <span>{{ card.description }}</span></p>
 		<p id="artifact-museum-num" align="left"><span>{{ card.museum_num }}</span></p>
 	</div>
@@ -18,7 +18,7 @@
 </div>
 
 <div id="right-box" class="test">
-	<p>Welcome <span></span></p>
+	<p id="welcome">Welcome <span></span></p>
 	<div id="instructions">
 		<p>Take a look at the artifact on the left. Enter your guess into the box below and submit your answer to test your knowledge!</p>
 	</div>

@@ -146,6 +146,11 @@ def setup_session():
     # Optionally, we can save their final score to a real database and show a leaderboard.
 
 
+@app.route('/test', methods=['GET'])
+def test():
+    return render_template('game.html')
+
+
 # Resets the session cookie before starting a new game.
 @app.route('/reset_session', methods=['GET'])
 def reset():
@@ -164,7 +169,7 @@ def hello_world():
         print "GOT FIRST CARD", session # debug
     else:
         card = get_artifact_by_museum_num(session['game']['current_card'])
-    return render_template('hello.html', card=card)
+    return render_template('game.html', card=card)
 
 
 # Handles user date guesses
