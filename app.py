@@ -169,7 +169,7 @@ def hello_world():
         print "GOT FIRST CARD", session # debug
     else:
         card = get_artifact_by_museum_num(session['game']['current_card'])
-    return render_template('hello.html', card=card)
+    return render_template('game.html', card=card)
 
 
 # Handles user date guesses
