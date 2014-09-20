@@ -144,6 +144,7 @@ def reset():
 # The main page
 @app.route('/', methods=['GET'])
 def hello_world():
+    session['game'] = session.get('game', {'score': 0, 'player_name': None, 'prev_cards': {}, 'current_card': None})
     if session['game'].get('current_card') is None:
         card = get_random_artifact()
         session['game']['current_card'] = card.museum_num
