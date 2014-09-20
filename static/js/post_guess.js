@@ -12,6 +12,7 @@ function submitGuess(){
   if(user_guess != null){
     console.log("User guessed: " + user_guess); // debug
     postGuess(user_guess);
+    mMuseumShipment.removeCrate();
     mainLine.selector.reset();
   }
   else {

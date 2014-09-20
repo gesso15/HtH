@@ -16,10 +16,6 @@ function draw() {
 	mMuseumShipment.draw();
 }
 
-function mouseClicked() {
-	mMuseumShipment.removeCrate();
-}
-
 /**************************************/
 /****** MuseumShipment Prototype ******/
 /**************************************/
