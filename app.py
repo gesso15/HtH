@@ -12,6 +12,7 @@ from pahmasettings import FLASK_SESSION_SECRET
 # Number of objects to return from search
 ROWS = 100
 NUM_ARTIFACTS_IN_EXHIBIT = 5
+SCORE_SCALE = 10000
 
 app = Flask(__name__)
 app.config.update(
@@ -235,13 +236,22 @@ def register_name():
 @app.route('/get_score', methods=['GET'])
 def get_score():
     template_values = []
+    game_score = 0
+    possible_score = 0
     for museum_num in session['game']['prev_cards']:
         card = get_artifact_by_museum_num(museum_num)
         guess = session['game']['prev_cards'][museum_num]
         card.guess = guess
+	card_range = card.prod_date_end - card.prod_date_begin + 1
+	card.score = int((1.0/card_range)*SCORE_SCALE)
+	card.guess_score = 0
+	if card.guess >= card.prod_date_begin and card.guess <= card.prod_date_end:
+	    card.guess_score = card.score
+	    game_score += card.score
+        possible_score += card.score
         template_values.append(card)
-        print template_values
-    return render_template('_player_game_data.html', cards=template_values)
+        #  print template_values  # debug
+    return render_template('_player_game_data.html', total_score=possible_score, final_score=game_score, cards=template_values)
 
 
 if __name__ == "__main__":
