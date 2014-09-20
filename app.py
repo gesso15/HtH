@@ -145,6 +145,11 @@ def setup_session():
     # Optionally, we can save their final score to a real database and show a leaderboard.
 
 
+@app.route('/test', methods=['GET'])
+def test():
+    return render_template('game.html')
+
+
 # Resets the session cookie before starting a new game.
 @app.route('/reset_session', methods=['GET'])
 def reset():
