@@ -51,7 +51,7 @@ function postGuess(user_guess) {
         $('#final-score').show();
       }
       // In either case, hide the user's guess and submit button. Display response text.
-      $('#user_guess').hide(); 
+      $('#user_guess').empty(); 
       $('#guess-submit').hide();
       $('#result').text(reply);
     },
