@@ -3,17 +3,21 @@
 
 
 <div id="left-box">
-	<h1 align="left">{{ card.name }}</h1>
-	<p align="left">Location of discovery:<span>{{ card.fcp }}</span></p>
-	<p align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</span></p>
-	<p align="left">Verbatim description: <span>{{ card.description }}</span></p>
-	<p align="left"><span>{{ card.museum_num }}</span></p>
+	<div id="placard">
+		<h1 align="left">{{ card.name }}</h1>
+	</div>
+	<div id="artifact-info">
+		<p align="left">Location of discovery:<span>{{ card.fcp }}</span></p>
+		<p align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} None {% endfor %}</span></p>
+		<p align="left">Verbatim description: <span>{{ card.description }}</span></p>
+		<p align="left"><span>{{ card.museum_num }}</span></p>
+	</div>
 	<div id="main-img-block">
 		<img src={{ card.img_URL }}/>
 	</div>
 </div>
 
-<div id="right-box">
+<div id="right-box" class="test">
 	<p>Welcome <span></span></p>
 	<div id="instructions">
 		<p>Take a look at the artifact on the left. Enter your guess into the box below and submit your answer to test your knowledge!</p>
