@@ -9,7 +9,7 @@ function MuseumShipment(num_crates) {
 	this.numCrates = num_crates;
 	this.shipment = [];
 	var crateGap = 10;
-	var crateSize = (width/5-(crateGap*num_crates))/num_crates;
+	var crateSize = (width/6-(crateGap*num_crates))/num_crates;
     for (var i = 0; i < this.numCrates; i++) {   
     	var xVal = i*(crateSize+crateGap);
     	this.shipment[i] = new Crate(xVal,0,crateSize);

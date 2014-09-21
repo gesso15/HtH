@@ -46,7 +46,9 @@ function draw() {
 	pop();
 	mainLine.draw();
 
-	//drawBoxes();
+	if ( mMuseumShipment.numCrates > 0 ) {
+		drawBoxes();
+	}
 }
 
 function mouseMoved() {
@@ -91,7 +93,7 @@ function drawBoxes() {
     push()
     fill(255);
     noStroke();
-    rect(0, 0, 300, 300)
+    rect(-1, 0, offset.right-offset.left, 63);
     pop();
     mMuseumShipment.draw();
     pop();
@@ -157,6 +159,7 @@ Timeline.prototype.mouseClicked = function() {
 		this.addPin(this.activePin);
 		var newY = this.activePin.yOffset + this.activePin.height + 14;
 		mMuseumShipment.removeCrate();
+		clear();
 		PIN_INDEX++;
 		if (this.pins.length == 5) {
 			this.plusButton.visible = false;
