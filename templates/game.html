@@ -11,7 +11,9 @@
 
 	<div class="row clearfix">	<!-- ROW 2-->
 	<div class="col-md-12 column">
+		<div>
 		<button id="open-exhibit" style="margin: 0 auto;" type="button" class="btn btn-primary" onclick="view_score();">Open Exhibit!</button>
+		</div>
 	</div> <!-- end ROW 2-->
 
 
@@ -24,7 +26,7 @@
 
 						<div class="row clearfix">
 							<div class=" col-md-12 column image-container">
-								<img id="artifact-image" class = "img-responsive" src={{ card.img_URL }}/> <!-- image goes here -->
+								<img id="artifact-image" class = "img-responsive" src={{ card.img_URL }} alt={{ card.name }}/>
 							</div>
 						</div>
 					</div>
