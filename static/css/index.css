@@ -1,14 +1,12 @@
 body {
-	font-family: 'Cinzel', serif;
+	font-family: 'Helvetica', serif;
 }
 
 .modal-title {
-	font-family: 'Calligraffitti', cursive;
 	font-size: 36px;
 }
 
 #welcome {
-	font-family: 'Calligraffitti', cursive;
 	font-size: 36px;
 	margin-top: 10px;
 }

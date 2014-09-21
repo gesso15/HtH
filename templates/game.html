@@ -12,8 +12,7 @@
 	<div class="row clearfix"> <!-- ROW 1.5: Contains Timeline  -->
 		
 		<div class="col-md-12 column" style="margin: 0 auto;">
-			<button id="final-score" onclick="view_score()">View your score</button>
-			<a href="/reset_session"><button id="replay">Play Again</button></a>
+			
 		</div>
 	
 	</div> <!-- end ROW 1.5-->
@@ -39,11 +38,19 @@
 										<div id="image-thumbnail">
 												<h4>Research</h4>
 												<div class="well">
-													<p id="user-guess" align="left">Curator <span>name</span>'s estimated date: <span> guess </span> <button id="guess-submit" onclick="submitGuess();" form="submitForm">Submit Guess</button></p> 
+													
+													<p align="left">Curator: <span id="user-name"></span></p>
+													
+													<p align="left">Estimated date: <span id="user-date"></span> <button id="guess-submit" onclick="submitGuess();" form="submitForm">Submit Guess</button></p> 
+													
 													<p id="artifact-location" align="left">Location of discovery:<span> {{ card.fcp }} </span></p>
+													
 													<p id="artifact-culture" align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} no associated culture noted {% endfor %}</span></p>
+													
 													<p id="artifact-description" align="left">Verbatim description: <span> {{ card.description }} </span></p>
+													
 													<p id="artifact-museum-num" align="left"><span> {{ card.museum_num }} </span></p>
+												
 												</div>
 										</div>
 									</div>
@@ -58,6 +65,10 @@
 			<div id="image-thumbnail" class="thumbnail">
 						<h4>Remaining Artifacts</h4>
 							<button id="next-artifact" onclick="get_next_art()">Next Artifact</button>
+							<div id="replay-game" style="text-align:center;">
+								<h4>Play Again</h4>
+								<a href="/reset_session"><span style="font-size: 200px;"id="replay" class="glyphicon glyphicon-repeat"></span></a>
+							</div>
 						<p class="well">BOXES HERE</p>
 			</div>
 		</div> <!-- end ROW 2 COL 2 -->
