@@ -160,6 +160,7 @@ function view_score() {
       $('#artifact-header').hide();
       $('#open-exhibit').hide();
       $('#replay-game').show();
+      colorizeResults();
     },
     error: function (jqXHR, textStatus, errorThrown)
     {

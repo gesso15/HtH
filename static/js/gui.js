@@ -85,6 +85,7 @@ function setFirstPin() {
 	var pin = new Pin(null, mainLine, PIN_STROKE[0], PIN_FILL[0], 28);
 	mainLine.setActivePin(pin);
 	getElement('artifact-image').style('border', 'thick solid ' + PIN_HEX[PIN_INDEX]);
+	getElement('user-date').style('color', PIN_HEX[PIN_INDEX]);
 }
 
 function growSpacer() {
@@ -102,6 +103,14 @@ function drawBoxes() {
 	translate(120, -14);
     mMuseumShipment.draw();
     pop();
+}
+
+function colorizeResults() {
+	getElement('artifact-image-0').style('border', 'thick solid ' + PIN_HEX[0]);
+	getElement('artifact-image-1').style('border', 'thick solid ' + PIN_HEX[1]);
+	getElement('artifact-image-2').style('border', 'thick solid ' + PIN_HEX[2]);
+	getElement('artifact-image-3').style('border', 'thick solid ' + PIN_HEX[3]);
+	getElement('artifact-image-4').style('border', 'thick solid ' + PIN_HEX[4]);
 }
 
 
@@ -179,6 +188,7 @@ Timeline.prototype.nextPin = function() {
 	  				  PIN_FILL[PIN_INDEX], newY);
 	this.setActivePin(pin);
 	getElement('artifact-image').style('border', 'thick solid ' + PIN_HEX[PIN_INDEX]);
+	getElement('user-date').style('color', PIN_HEX[PIN_INDEX]);
 };
 
 Timeline.prototype.addSegment = function(seg) {
