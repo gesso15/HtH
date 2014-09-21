@@ -1,9 +1,10 @@
 // Initialize modal on pageload
 $(document).ready(function() {
   $('#myModal').modal('show');
+  $('#close-modal').hide();
   $('#next-artifact').hide();
   $('#final-score').hide();
-  $('#replay').hide();
+  $('#replay-game').hide();
 })
 
 // Year selection magic
@@ -52,7 +53,7 @@ function postGuess(user_guess) {
         $('#final-score').show();
       }
       // In either case, hide the user's guess and submit button. Display response text.
-      $('#user_guess').empty(); 
+      $('#user-date').empty(); 
       $('#guess-submit').hide();
       $('#result').text(reply);
     },
@@ -64,11 +65,11 @@ function postGuess(user_guess) {
 }
 
 function reprimandUser() {
-    $('#result').text("WTF you didn't select a date?!"); 
+    $('#result').text("You didn't select a date?!"); 
 }
 
 function displayGuess(current_guess) {
-    $('#user_guess').text(current_guess); 
+    $('#user-date').text(current_guess); 
 }
 
 
@@ -99,7 +100,7 @@ function get_next_art() {
       $("#answer > p:nth-child(3) > span").text(data["prod_date_s"]); // prod_date_s
       $("#answer").hide(); // make sure answer is hidden again
       $("#result").empty(); // remove feedback from previous card guess
-      $("#user_guess").empty(); // remove feedback from previous card guess
+      $("#user-date").empty(); // remove feedback from previous card guess
       $("#guess-submit").show(); // show guess submit button
       $('#next-artifact').hide(); // hide next artifact button
     },
@@ -135,12 +136,16 @@ $('#nameForm').submit(function(event){
     success:function(server_data){
       console.log(server_data); // debug
       // If the request was successful, welcome the player
-      $('#modal-message').html("<p> Welcome " + name + "!</p>");
+      $('#modal-message').html(
+        "<p>Thank you, " + name + "!</p>"
+        + "<p>Now you can start unboxing the artifacts and identifying their dates of origin.</p>"
+        + "<p>When you finish dating the artifacts, we'll open the exhibit.</p>");
+      $('#close-modal').show();
       // Hide parts of the form that we don't need
       $('#nameForm > input[name="player_name"]').hide();
       $('#nameForm > input[type="submit"]').hide();
       // Add player name to page.
-      $("#right-box > p:nth-child(1) > span").text(name);
+      $("#user-name").text(name);
     },
     error:function(){
       // If the request failed, give feedback to user (replace loading gif with failure message)
@@ -163,7 +168,7 @@ function view_score() {
       $('#left-box').html(data);
       $('#left-box').show();
       $('#final-score').hide();
-      $('#replay').show();
+      $('#replay-game').show();
     },
     error: function (jqXHR, textStatus, errorThrown)
     {
