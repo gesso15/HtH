@@ -47,7 +47,7 @@ function draw() {
 	mainLine.draw();
 
 	if ( mMuseumShipment.numCrates > 0 ) {
-		drawBoxes();
+		//drawBoxes();
 	}
 }
 
@@ -82,7 +82,7 @@ function setFirstPin() {
 }
 
 function growSpacer() {
-	SPACER_SIZE += mainLine.activePin.height + 14;
+	SPACER_SIZE += mainLine.pins[mainLine.pins.length-1].height + 14;
 	spacer.size(0, SPACER_SIZE);
 }
 
@@ -157,22 +157,22 @@ Timeline.prototype.mouseClicked = function() {
 	}
 	if ( mouseOver(this.doneButton) && this.activePin != null ) {
 		this.addPin(this.activePin);
-		var newY = this.activePin.yOffset + this.activePin.height + 14;
-		mMuseumShipment.removeCrate();
+		submitGuess();
 		clear();
 		PIN_INDEX++;
-		if (this.pins.length == 5) {
-			this.plusButton.visible = false;
-			this.minusButton.visible = false;
-			this.doneButton.visible = false;
-			this.activePin = null;
-			return;
-		}
-		growSpacer();
-		var pin = new Pin(null, this, PIN_STROKE[PIN_INDEX],
-						  PIN_FILL[PIN_INDEX], newY);
-		this.setActivePin(pin);
+		this.plusButton.visible = false;
+		this.minusButton.visible = false;
+		this.doneButton.visible = false;
+		this.activePin = null;
 	}
+};
+
+Timeline.prototype.nextPin = function() {
+	growSpacer();
+	var newY = this.pins[this.pins.length-1].yOffset + this.pins[this.pins.length-1].height + 14;
+	var pin = new Pin(null, this, PIN_STROKE[PIN_INDEX],
+	  				  PIN_FILL[PIN_INDEX], newY);
+	this.setActivePin(pin);
 };
 
 Timeline.prototype.addSegment = function(seg) {
