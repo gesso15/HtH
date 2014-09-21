@@ -1,20 +1,47 @@
-var mainLine; // Only one global. Not super bad, I guess.
+var mainLine;
+var canvas;
+var spacer;
+var boxes;
+var PIN_INDEX = 0;
+var PIN_STROKE;
+var PIN_FILL;
+var SPACER_SIZE = 150;
 
 function setup() {
-	createCanvas(windowWidth-16, windowHeight-16);
 
-	mainLine = new Timeline(120, 20, windowWidth-200, 50, 501, 2014);
+	PIN_STROKE = [ color(0, 153, 153),
+                   color(153, 0, 153),
+                   color(153, 153, 0),
+                   color(0, 0, 153),
+                   color(0, 153, 0) ];
+	PIN_FILL = [ color(220, 240, 240),
+	             color(240, 220, 240),
+	             color(240, 240, 220),
+	             color(220, 220, 240),
+	             color(220, 240, 220) ];
+	
+	canvas = createCanvas(windowWidth, windowHeight);
+	canvas.position(0, 0);
+
+	spacer = getElement('timeline');
+	boxes = getElement('boxes');
+	spacer.size(0, SPACER_SIZE);
+
+	mainLine = new Timeline(50, 10, windowWidth-100, 50, 501, 2014);
 	//mainLine.addSegment(new Segment(-3500, 500, "Ancient History", 255, 150, mainLine));
 	mainLine.addSegment(new Segment(501, 1500, "Middle Ages", 255, 125, mainLine));
 	mainLine.addSegment(new Segment(1501, 1900, "Early Modern", 255, 100, mainLine));
 	mainLine.addSegment(new Segment(1901, 2014, "Modern", 255, 75, mainLine));
 
-	pin = new Pin(null, mainLine, color(0, 153, 153), color(220, 240, 240), 30);
-	mainLine.setActivePin(pin);
+	setFirstPin();
 }
 
 function draw() {
-	background(255);
+	push()
+	fill(255);
+	noStroke();
+	rect(0, 0, width, SPACER_SIZE);
+	pop();
 	mainLine.draw();
 }
 
@@ -41,6 +68,23 @@ function mouseOver(box) {
 	if ( mouseY < box.posY ) { return false; }
 	if ( mouseY > box.posY + box.height ) { return false; }
 	return true;
+}
+
+function setFirstPin() {
+	var pin = new Pin(null, mainLine, PIN_STROKE[0], PIN_FILL[0], 28);
+	mainLine.setActivePin(pin);
+}
+
+function growSpacer() {
+	SPACER_SIZE += mainLine.activePin.height + 14;
+	spacer.size(0, SPACER_SIZE);
+}
+
+function drawBoxes() {
+	push();
+    var offset = boxes.elt.getBoundingClientRect();
+    translate(offset.left, offset.top);
+    pop();
 }
 
 
@@ -80,8 +124,8 @@ Timeline.prototype.draw = function() {
 	this.doneButton.draw();
 	pop();
 	
+	if (this.activePin != null) { this.activePin.draw(); }
 	for (var i in this.pins) { this.pins[i].draw(); }
-	this.activePin.draw();
 	
 	pop();
 };
@@ -100,7 +144,20 @@ Timeline.prototype.mouseClicked = function() {
 		this.moveActivePinTo(this.activePin.year - 1);
 	}
 	if ( mouseOver(this.doneButton) && this.activePin != null ) {
-		// TODO(jettisonjoe): Make a done button and stuff for it to do.
+		this.addPin(this.activePin);
+		var newY = this.activePin.yOffset + this.activePin.height + 14;
+		PIN_INDEX++;
+		if (this.pins.length == 5) {
+			this.plusButton.visible = false;
+			this.minusButton.visible = false;
+			this.doneButton.visible = false;
+			this.activePin = null;
+			return;
+		}
+		growSpacer();
+		var pin = new Pin(null, this, PIN_STROKE[PIN_INDEX],
+						  PIN_FILL[PIN_INDEX], newY);
+		this.setActivePin(pin);
 	}
 };
 
@@ -241,7 +298,8 @@ Button.prototype.draw = function() {
 	translate(this.posX, this.posY);
 	noFill();
 	rect(0, 0, this.width, this.height);
-	text(this.label, 2, this.height-5);
+	textAlign(CENTER);
+	text(this.label, this.width/2, this.height/2+4);
 	pop();
 };
 
