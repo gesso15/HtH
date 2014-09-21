@@ -134,7 +134,7 @@ $('#nameForm').submit(function(event){
       $('#close-modal').show();
       // Hide parts of the form that we don't need
       $('#nameForm > input[name="player_name"]').hide();
-      $('#nameForm > input[type="submit"]').hide();
+      $('#nameForm > button[type="submit"]').hide();
       // Add player name to page.
       $("#user-name").text(name);
     },
