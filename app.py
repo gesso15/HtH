@@ -123,7 +123,7 @@ def art_to_dict(art_obj):
     result['prod_date_begin'] = art_obj.prod_date_begin
     result['prod_date_end'] = art_obj.prod_date_end
     result['prod_date_s'] = art_obj.prod_date_s
-    result['asso_cult'] = art_obj.asso_cult
+    result['assoccult'] = art_obj.asso_cult
     result['object_id'] = art_obj.object_id
     result['img_id'] = art_obj.img_id
     result['img_URL'] = art_obj.img_URL
