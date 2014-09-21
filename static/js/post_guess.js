@@ -1,6 +1,7 @@
 // Initialize modal on pageload
 $(document).ready(function() {
   $('#myModal').modal('show');
+  $('#close-modal').hide();
   $('#next-artifact').hide();
   $('#final-score').hide();
   $('#replay-game').hide();
@@ -135,7 +136,11 @@ $('#nameForm').submit(function(event){
     success:function(server_data){
       console.log(server_data); // debug
       // If the request was successful, welcome the player
-      $('#modal-message').html("<p> Welcome " + name + "!</p>");
+      $('#modal-message').html(
+        "<p>Thank you, " + name + "!</p>"
+        + "<p>Now you can start unboxing the artifacts and identifying their dates of origin.</p>"
+        + "<p>When you finish dating the artifacts, we'll open the exhibit.</p>");
+      $('#close-modal').show();
       // Hide parts of the form that we don't need
       $('#nameForm > input[name="player_name"]').hide();
       $('#nameForm > input[type="submit"]').hide();
