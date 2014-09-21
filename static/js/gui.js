@@ -23,6 +23,8 @@ function setup() {
 	canvas = createCanvas(windowWidth, windowHeight);
 	canvas.position(0, 0);
 
+	mMuseumShipment = new MuseumShipment(num_crates);
+
 	spacer = getElement('timeline');
 	boxes = getElement('boxes');
 	spacer.size(0, SPACER_SIZE);
@@ -43,6 +45,8 @@ function draw() {
 	rect(0, 0, width, SPACER_SIZE);
 	pop();
 	mainLine.draw();
+
+	drawBoxes();
 }
 
 function mouseMoved() {
@@ -84,6 +88,12 @@ function drawBoxes() {
 	push();
     var offset = boxes.elt.getBoundingClientRect();
     translate(offset.left, offset.top);
+    push()
+    fill(255);
+    noStroke();
+    rect(0, 0, 300, 300)
+    pop();
+    mMuseumShipment.draw();
     pop();
 }
 
@@ -146,6 +156,7 @@ Timeline.prototype.mouseClicked = function() {
 	if ( mouseOver(this.doneButton) && this.activePin != null ) {
 		this.addPin(this.activePin);
 		var newY = this.activePin.yOffset + this.activePin.height + 14;
+		mMuseumShipment.removeCrate();
 		PIN_INDEX++;
 		if (this.pins.length == 5) {
 			this.plusButton.visible = false;

@@ -1,21 +1,6 @@
 var mMuseumShipment;
 var num_crates = 5;
 
-//probably take these variables out
-// var img;
-// var useImage = false;
-
-function setup() {
-	createCanvas(windowWidth/2, (2*windowHeight)/3);
-	mMuseumShipment = new MuseumShipment(num_crates);
-	//img = loadImage("crate.png");
-}
-
-function draw() {
-	background(255);
-	mMuseumShipment.draw();
-}
-
 /**************************************/
 /****** MuseumShipment Prototype ******/
 /**************************************/
@@ -24,7 +9,7 @@ function MuseumShipment(num_crates) {
 	this.numCrates = num_crates;
 	this.shipment = [];
 	var crateGap = 10;
-	var crateSize = (width-(crateGap*num_crates))/num_crates;
+	var crateSize = (width/5-(crateGap*num_crates))/num_crates;
     for (var i = 0; i < this.numCrates; i++) {   
     	var xVal = i*(crateSize+crateGap);
     	this.shipment[i] = new Crate(xVal,0,crateSize);
