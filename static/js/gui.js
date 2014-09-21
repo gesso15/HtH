@@ -5,7 +5,7 @@ var boxes;
 var PIN_INDEX = 0;
 var PIN_STROKE;
 var PIN_FILL;
-var SPACER_SIZE = 140;
+var SPACER_SIZE = 165;
 
 function setup() {
 
@@ -20,16 +20,15 @@ function setup() {
 	             color(220, 220, 240),
 	             color(220, 240, 220) ];
 	
-	canvas = createCanvas(windowWidth, windowHeight);
+	canvas = createCanvas(windowWidth, SPACER_SIZE);
 	canvas.position(0, 0);
 
 	mMuseumShipment = new MuseumShipment(num_crates);
 
 	spacer = getElement('timeline');
-	boxes = getElement('boxes');
 	spacer.size(0, SPACER_SIZE);
 
-	mainLine = new Timeline(50, 10, windowWidth-100, 50, 501, 2014);
+	mainLine = new Timeline(50, 32, windowWidth-100, 50, 501, 2014);
 	//mainLine.addSegment(new Segment(-3500, 500, "Ancient History", 255, 150, mainLine));
 	mainLine.addSegment(new Segment(501, 1500, "Middle Ages", 255, 125, mainLine));
 	mainLine.addSegment(new Segment(1501, 1900, "Early Modern", 255, 100, mainLine));
@@ -47,7 +46,7 @@ function draw() {
 	mainLine.draw();
 
 	if ( mMuseumShipment.numCrates > 0 ) {
-		//drawBoxes();
+		drawBoxes();
 	}
 }
 
@@ -84,17 +83,13 @@ function setFirstPin() {
 function growSpacer() {
 	SPACER_SIZE += mainLine.pins[mainLine.pins.length-1].height + 14;
 	spacer.size(0, SPACER_SIZE);
+	canvas.size(windowWidth, SPACER_SIZE);
+	canvas.position(0, 0);
 }
 
 function drawBoxes() {
 	push();
-    var offset = boxes.elt.getBoundingClientRect();
-    translate(offset.left, offset.top);
-    push()
-    fill(255);
-    noStroke();
-    rect(-1, 0, offset.right-offset.left, 63);
-    pop();
+	translate(50, 5);
     mMuseumShipment.draw();
     pop();
 }
