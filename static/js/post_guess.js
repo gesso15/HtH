@@ -156,6 +156,7 @@ function view_score() {
     {
       var data = server_data;
       console.log(data); //debug line
+      $('#main-card-info').replaceWith(data);
       $('#artifact-header').hide();
       $('#open-exhibit').hide();
       $('#replay-game').show();
