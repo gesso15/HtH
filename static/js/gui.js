@@ -20,7 +20,7 @@ function setup() {
 	             color(220, 220, 240),
 	             color(220, 240, 220) ];
 	
-	canvas = createCanvas(windowWidth, windowHeight);
+	canvas = createCanvas(windowWidth, SPACER_SIZE);
 	canvas.position(0, 0);
 
 	mMuseumShipment = new MuseumShipment(num_crates);
@@ -84,6 +84,8 @@ function setFirstPin() {
 function growSpacer() {
 	SPACER_SIZE += mainLine.pins[mainLine.pins.length-1].height + 14;
 	spacer.size(0, SPACER_SIZE);
+	canvas.size(width, SPACER_SIZE);
+	canvas.position(0, 0);
 }
 
 function drawBoxes() {
