@@ -5,7 +5,7 @@ var boxes;
 var PIN_INDEX = 0;
 var PIN_STROKE;
 var PIN_FILL;
-var SPACER_SIZE = 150;
+var SPACER_SIZE = 140;
 
 function setup() {
 
@@ -46,7 +46,7 @@ function draw() {
 	pop();
 	mainLine.draw();
 
-	drawBoxes();
+	//drawBoxes();
 }
 
 function mouseMoved() {
@@ -191,6 +191,7 @@ Timeline.prototype.setActivePin = function(pin) {
 Timeline.prototype.moveActivePinTo = function(year) {
 	this.activePin.setYear(year);
 	this.updateButtonPos();
+	displayGuess(year);
 };
 
 Timeline.prototype.updateButtonPos = function() {
