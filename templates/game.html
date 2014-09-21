@@ -24,7 +24,7 @@
 
 									<div class="col-md-6 column">
 										<div id="image-thumbnail">
-											<h4>{{ card.name }}</h4>
+											<h4 id="artifact-name">{{ card.name }}</h4>
 
 											<div class="row clearfix">
 												<div class=" col-md-12 column image-container">
@@ -45,7 +45,7 @@
 													
 													<p id="artifact-location" align="left">Location of discovery:<span> {{ card.fcp }} </span></p>
 													
-													<p id="artifact-culture" align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} no associated culture noted {% endfor %}</span></p>
+													<p id="artifact-culture" align="left">Associated culture:<span>{% for item in card.asso_cult %} {{ item }} {% else %} No associated culture noted. {% endfor %}</span></p>
 													
 													<p id="artifact-description" align="left">Verbatim description: <span> {{ card.description }} </span></p>
 													
@@ -63,14 +63,13 @@
 		
 		<div class="col-md-4 column"> <!-- ROW 2 COL 2: Contains Box Graphics -->
 			<div id="image-thumbnail" class="thumbnail">
-						<h4>Remaining Artifacts</h4>
-							<button id="next-artifact" onclick="get_next_art()">Next Artifact</button>
+						<h4 id="artifact-header">Remaining Artifacts</h4>
+						<button id="open-exhibit" type="button" class="btn btn-primary" onclick="view_score();">Open Exhibit!</button>
 							<div id="replay-game" style="text-align:center;">
-								<h4>Play Again</h4>
+								<p>You successfully opened your exhibit of the artifacts from the field! Would you like to receive another shipment and start again?</p>
 								<a href="/reset_session"><span style="font-size: 200px;"id="replay" class="glyphicon glyphicon-repeat"></span></a>
 							</div>
 							<div id="boxes"></div>
-						<p class="well">BOXES HERE</p>
 			</div>
 		</div> <!-- end ROW 2 COL 2 -->
 	

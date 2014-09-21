@@ -2,22 +2,20 @@
 $(document).ready(function() {
   $('#myModal').modal('show');
   $('#close-modal').hide();
-  $('#next-artifact').hide();
-  $('#final-score').hide();
+  $('#open-exhibit').hide();
   $('#replay-game').hide();
 })
 
 // Year selection magic
 function submitGuess(){  
-  user_guess = mainLine.selector.year;
+  user_guess = mainLine.activePin.year;
   if(user_guess != null){
     console.log("User guessed: " + user_guess); // debug
     postGuess(user_guess);
     mMuseumShipment.removeCrate();
-    mainLine.selector.reset();
   }
   else {
-    console.log("WTF user did not select a date?!");
+    console.log("No date selected.");
     reprimandUser();
   }
 }
@@ -28,10 +26,6 @@ function postGuess(user_guess) {
     type: 'POST', // HTTP request method (Send the data using post)
     url: '/', // Where to send the data
     data: {'date_guess': user_guess}, // Data to be sent
-    beforeSend:function(){
-      // While we wait to get data back from the server, put a loading gif on the page
-      $('#result').html('<div class="loading"><img src="http://www.kyleschaeffer.com/wp-content/uploads/2010/04/loading.gif" alt="Loading..." /></div>');
-    },
     success:function(server_data){
       var data = JSON.parse(server_data);
       console.log(data); // debug
@@ -41,21 +35,17 @@ function postGuess(user_guess) {
       game_end_flag = data['game_end_flag'];
 
       // Respond to user
-      var reply = "Your guess: " + guess + ". Correct range: " + date_begin + "-" + date_end;
+      //var reply = "Your guess: " + guess + ". Correct range: " + date_begin + "-" + date_end;
       // If the game isn't over, show the Next Artifact button.
       if (game_end_flag == false){
-        $('#next-artifact').show();
+        get_next_art();
       }
-      // If the game is over. Thank the user and show the final score button.
       else {
-        reply += " Thanks for playing!";
-        $('#left-box').hide();
-        $('#final-score').show();
+        $('#open-exhibit').show();
       }
       // In either case, hide the user's guess and submit button. Display response text.
       $('#user-date').empty(); 
       $('#guess-submit').hide();
-      $('#result').text(reply);
     },
     error:function(){
       // If the request failed, give feedback to user (replace loading gif with failure message)
@@ -86,6 +76,7 @@ function get_next_art() {
     data : "",
     success: function(server_data, textStatus, jqXHR)
     {
+      mainLine.nextPin();
       var data = JSON.parse(server_data);
       console.log(data); //debug line
       $("#artifact-name").text(data["name"]); // name
@@ -165,9 +156,8 @@ function view_score() {
     {
       var data = server_data;
       console.log(data); //debug line
-      $('#left-box').html(data);
-      $('#left-box').show();
-      $('#final-score').hide();
+      $('#artifact-header').hide();
+      $('#open-exhibit').hide();
       $('#replay-game').show();
     },
     error: function (jqXHR, textStatus, errorThrown)
