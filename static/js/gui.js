@@ -5,6 +5,7 @@ var boxes;
 var PIN_INDEX = 0;
 var PIN_STROKE;
 var PIN_FILL;
+var PIN_HEX;
 var SPACER_SIZE = 165;
 
 function setup() {
@@ -19,6 +20,11 @@ function setup() {
 	             color(240, 240, 220),
 	             color(220, 220, 240),
 	             color(220, 240, 220) ];
+	PIN_HEX = [ '#009999',
+	            '#990099',
+	            '#999900',
+	            '#000099',
+	            '#009900' ];
 	
 	canvas = createCanvas(windowWidth, SPACER_SIZE);
 	canvas.position(0, 0);
@@ -78,6 +84,7 @@ function mouseOver(box) {
 function setFirstPin() {
 	var pin = new Pin(null, mainLine, PIN_STROKE[0], PIN_FILL[0], 28);
 	mainLine.setActivePin(pin);
+	getElement('artifact-image').style('border', 'thick solid ' + PIN_HEX[PIN_INDEX]);
 }
 
 function growSpacer() {
@@ -89,7 +96,10 @@ function growSpacer() {
 
 function drawBoxes() {
 	push();
-	translate(50, 5);
+	fill(0);
+	translate(50, 19);
+	text("REMAINING ARTIFACTS:", 0, 0);
+	translate(120, -14);
     mMuseumShipment.draw();
     pop();
 }
@@ -168,6 +178,7 @@ Timeline.prototype.nextPin = function() {
 	var pin = new Pin(null, this, PIN_STROKE[PIN_INDEX],
 	  				  PIN_FILL[PIN_INDEX], newY);
 	this.setActivePin(pin);
+	getElement('artifact-image').style('border', 'thick solid ' + PIN_HEX[PIN_INDEX]);
 };
 
 Timeline.prototype.addSegment = function(seg) {
