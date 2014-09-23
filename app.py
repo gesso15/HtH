@@ -5,6 +5,7 @@ import json
 import jinja2
 import random
 import api_utils
+import game_utils
 import dateutil.parser as parser
 from pahmasettings import FLASK_SESSION_SECRET
 # import model # for database. not in use yet
@@ -12,7 +13,7 @@ from pahmasettings import FLASK_SESSION_SECRET
 # Number of objects to return from search
 ROWS = 100
 NUM_ARTIFACTS_IN_EXHIBIT = 5
-SCORE_SCALE = 10000
+SCORE_SCALE = 1000
 
 app = Flask(__name__)
 app.config.update(
@@ -54,8 +55,6 @@ def query_constructor(query_terms='objproddate_begin_dt:[* TO *]' +
                       "objproddate_s, objassoccult_ss, id, blob_ss," +
                       "objdescr_s, objfilecode_ss, objmusno_s",
                       max_results=100):
-    # result = query(q='''objtype_s:"archaeology" AND objproddate_txt:(+Manchu +(Qing) +Dynasty) AND blob_ss:[* TO *]''', fl="blob_ss,objname_s,objproddate_txt", rows=ROWS+1)['response']
-    # result = api_utils.query(q='''objtype_s:"ethnography" AND (objfilecode_ss:"2.2 Personal Adornments and Accoutrements") AND blob_ss:[* TO *]''', fl="", rows=ROWS+1)['response']
     return api_utils.query(q=query_terms,
                            fl=search_filter,
                            rows=max_results)['response']
@@ -240,14 +239,10 @@ def get_score():
     possible_score = 0
     for museum_num in session['game']['prev_cards']:
         card = get_artifact_by_museum_num(museum_num)
-        guess = session['game']['prev_cards'][museum_num]
-        card.guess = guess
-	card_range = card.prod_date_end - card.prod_date_begin + 1
-	card.score = int((1.0/card_range)*SCORE_SCALE)
-	card.guess_score = 0
-	if card.guess >= card.prod_date_begin and card.guess <= card.prod_date_end:
-	    card.guess_score = card.score
-	    game_score += card.score
+	# users guess is stored in the museum_num key
+        card.guess = session['game']['prev_cards'][museum_num] 
+	card.guess_score, card.score = game_utils.score_card(card.guess, card.prod_date_begin, card.prod_date_end)
+	game_score += card.guess_score
         possible_score += card.score
         template_values.append(card)
         #  print template_values  # debug
